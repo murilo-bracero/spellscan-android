@@ -1,6 +1,9 @@
+import com.google.protobuf.gradle.id
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.protobuf")
 }
 
 android {
@@ -46,11 +49,21 @@ android {
         viewBinding = true
         buildConfig = true
     }
+
+    sourceSets["main"].java.srcDirs("build/generated/source/proto/main/grpc")
+    sourceSets["main"].java.srcDirs("build/generated/source/proto/main/grpckt")
+    sourceSets["main"].java.srcDirs("build/generated/source/proto/main/java")
+
+    sourceSets["debug"].java.srcDirs("build/generated/source/proto/debug/grpc")
+    sourceSets["debug"].java.srcDirs("build/generated/source/proto/debug/grpckt")
+    sourceSets["debug"].java.srcDirs("build/generated/source/proto/debug/java")
 }
 
 val camerax_version = "1.3.0"
 val cronet_version = "18.0.1"
-val grpc_version = "1.59.1"
+val grpc_version = "1.60.0"
+val protobuf_version = "3.25.1"
+val grpc_kotlin_stub_version = "1.4.1"
 
 dependencies {
 
@@ -71,11 +84,21 @@ dependencies {
 
     implementation("androidx.fragment:fragment-ktx:1.6.2")
 
+    // grpc
+    implementation("io.grpc:grpc-protobuf-lite:${grpc_version}")
+    implementation("io.grpc:grpc-stub:${grpc_version}")
+
     implementation("io.grpc:grpc-cronet:${grpc_version}")
     implementation("io.grpc:grpc-okhttp:${grpc_version}")
     implementation("com.google.android.gms:play-services-cronet:${cronet_version}")
 
+    //grpc - transitive dependencies
     implementation("com.google.guava:guava:31.0.1-android")
+    implementation("org.apache.tomcat:annotations-api:6.0.53")
+
+    // coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-inline:5.2.0")
@@ -83,4 +106,30 @@ dependencies {
     androidTestImplementation("org.mockito:mockito-android:2.7.15")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+}
+
+protobuf {
+    protoc{
+        artifact = "com.google.protobuf:protoc:${protobuf_version}"
+    }
+    plugins {
+        id("grpc") {
+            artifact = "io.grpc:protoc-gen-grpc-java:${grpc_version}"
+        }
+    }
+    generateProtoTasks {
+        all().forEach {
+            it.builtins {
+                id("java") {
+                    option("lite")
+                }
+            }
+
+            it.plugins {
+                id("grpc") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }

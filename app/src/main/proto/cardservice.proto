@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.spellscan.proto";
+option java_outer_classname = "CardServiceProto";
+
+package cardservice;
+
+message CardRequest {
+  string name = 1;
+  string type = 2;
+  string set = 3;
+}
+
+message CardResponse {
+  string id = 1;
+  string name = 2;
+  string cost = 3;
+  string type = 4;
+  string set = 5;
+  string lang = 6;
+  string imageUrl = 7;
+}
+
+service CardService {
+  rpc find(CardRequest) returns (CardResponse);
+
+  rpc findAll(stream CardRequest) returns (stream CardResponse);
+}
