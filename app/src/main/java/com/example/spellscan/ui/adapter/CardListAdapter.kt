@@ -6,13 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spellscan.R
-import com.example.spellscan.model.Card
 import com.example.spellscan.model.CardRow
 
-class CardListAdapter(private val dataset: ArrayList<CardRow>) :
+@SuppressLint("NotifyDataSetChanged")
+class CardListAdapter(private val liveDataset: LiveData<MutableList<CardRow>>, lifecycleOwner: LifecycleOwner) :
     RecyclerView.Adapter<CardListAdapter.ViewHolder>() {
+
+    init {
+        liveDataset.observe(lifecycleOwner) {
+            notifyDataSetChanged()
+        }
+    }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val checkbox: CheckBox
@@ -36,27 +44,17 @@ class CardListAdapter(private val dataset: ArrayList<CardRow>) :
         val holder = ViewHolder(view)
 
         holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
-            dataset[holder.adapterPosition].isChecked = isChecked
+            liveDataset.value!![holder.adapterPosition].isChecked = isChecked
         }
 
         return holder
     }
 
-    override fun getItemCount() = dataset.size
+    override fun getItemCount() = liveDataset.value!!.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.cardName.text = dataset[position].name
-        holder.cardType.text = dataset[position].type
-        holder.cardSet.text = dataset[position].set
-    }
-
-    fun getCheckedCards(): List<CardRow> {
-        return dataset.filter { it.isChecked }
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun removeCheckedCards() {
-        dataset.removeIf { it.isChecked }
-        notifyDataSetChanged()
+        holder.cardName.text = liveDataset.value!![position].name
+        holder.cardType.text = liveDataset.value!![position].type
+        holder.cardSet.text = liveDataset.value!![position].set
     }
 }

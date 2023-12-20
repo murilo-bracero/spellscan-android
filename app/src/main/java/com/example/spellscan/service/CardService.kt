@@ -1,21 +1,30 @@
 package com.example.spellscan.service
 
-import android.content.Context
-import com.example.spellscan.config.GrpcChannelConfig
+import com.example.spellscan.config.GrpcConfig
 import com.example.spellscan.model.Card
-import io.grpc.ManagedChannel
+import com.spellscan.proto.CardRequest
+import com.spellscan.proto.CardResponse
+import com.spellscan.proto.CardServiceGrpc.CardServiceFutureStub
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class CardService(
-    private var channel: ManagedChannel?
+    private var stub: CardServiceFutureStub
 ) {
 
-    fun find(card: Card): Boolean {
-        // create stub for single finding
+    suspend fun find(card: Card): CardResponse {
+        val request = CardRequest.newBuilder()
+            .setName(card.name)
+            .setType(card.type)
+            .setSet(card.set)
+            .build()
 
-        return false
+        return withContext(Dispatchers.IO) {
+            stub.find(request).get()
+        }
     }
 
-    fun findAll(cards: List<Card>): List<Boolean> {
+    suspend fun findAll(cards: List<Card>): List<CardResponse> {
         if (cards.isEmpty()) {
             return emptyList()
         }
@@ -30,9 +39,9 @@ class CardService(
     }
 
     companion object {
-        fun newInstance(context: Context): CardService {
-            val channel = GrpcChannelConfig(context).getChannel()
-            return CardService(channel)
+        fun newInstance(): CardService {
+            val stub = GrpcConfig().getCardServiceGrpcStub()
+            return CardService(stub)
         }
     }
 

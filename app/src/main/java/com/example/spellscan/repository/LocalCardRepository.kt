@@ -1,26 +1,29 @@
 package com.example.spellscan.repository
 
 import com.example.spellscan.model.Card
+import java.util.UUID
 
 class LocalCardRepository private constructor() {
-    private val db = ArrayList<Card>()
+    private val db = HashMap<UUID, Card>()
 
     fun save(card: Card) {
-        db.add(card)
+        if (card.localId == null) {
+            card.localId = UUID.randomUUID()
+        }
+
+        db[card.localId!!] = card
     }
 
-    fun get(id: Int): Card {
+    fun findById(id: UUID): Card? {
         return db[id]
     }
 
-    fun getAll(): ArrayList<Card> {
-        return db
+    fun findAll(): ArrayList<Card> {
+        return db.values.toCollection(ArrayList())
     }
 
-    fun removeByProps(name: String, type: String, set: String) {
-        db.removeIf {
-            it.name == name && it.type == type && it.set == set
-        }
+    fun deleteById(id: UUID) {
+        db.remove(id)
     }
 
     companion object {

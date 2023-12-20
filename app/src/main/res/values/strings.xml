@@ -9,4 +9,5 @@
     <string name="card_set_placeholder">Card Set</string>
     <string name="add_button_text">Add</string>
     <string name="delete">Delete</string>
+    <string name="find_all">Find All</string>
 </resources>

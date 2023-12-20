@@ -33,8 +33,8 @@ android {
         }
 
         debug {
-            buildConfigField("String", "BACKEND_HOST", "\"localhost\"")
-            buildConfigField("int", "BACKEND_PORT", "8080")
+            buildConfigField("String", "BACKEND_HOST", "\"10.0.2.2\"")
+            buildConfigField("int", "BACKEND_PORT", "9000")
         }
     }
     compileOptions {
@@ -64,6 +64,7 @@ val cronet_version = "18.0.1"
 val grpc_version = "1.60.0"
 val protobuf_version = "3.25.1"
 val grpc_kotlin_stub_version = "1.4.1"
+val coroutines_version = "1.7.3"
 
 dependencies {
 
@@ -97,12 +98,13 @@ dependencies {
     implementation("org.apache.tomcat:annotations-api:6.0.53")
 
     // coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutines_version}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutines_version}")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-inline:5.2.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${coroutines_version}")
     androidTestImplementation("org.mockito:mockito-android:2.7.15")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

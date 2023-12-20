@@ -7,7 +7,6 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
         app:contentPaddingLeft="8dp"
         app:contentPaddingTop="4dp">
 
