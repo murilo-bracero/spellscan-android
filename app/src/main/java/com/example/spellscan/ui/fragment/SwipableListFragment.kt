@@ -1,14 +1,18 @@
 package com.example.spellscan.ui.fragment
 
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -20,16 +24,10 @@ import com.example.spellscan.databinding.FragmentSwipableListBinding
 import com.example.spellscan.repository.LocalCardRepository
 import com.example.spellscan.ui.adapter.CardListAdapter
 import com.example.spellscan.ui.viewmodel.CardDatasetViewModel
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.color.MaterialColors
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SwipableListFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SwipableListFragment : Fragment() {
     private val cardDatasetViewModel: CardDatasetViewModel by activityViewModels()
 
@@ -51,7 +49,10 @@ class SwipableListFragment : Fragment() {
         val displayMetrics = resources.displayMetrics
         val width = (displayMetrics.widthPixels / displayMetrics.density).toInt().dp
 
-        val deleteIcon = ResourcesCompat.getDrawable(resources, R.drawable.delete_icon, null)
+        val deleteIcon = ResourcesCompat.getDrawable(
+            resources, R.drawable.delete_icon,
+            context?.theme
+        )
 
         val swipeHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
             0,
@@ -73,6 +74,7 @@ class SwipableListFragment : Fragment() {
                 }
             }
 
+            @RequiresApi(Build.VERSION_CODES.Q)
             override fun onChildDraw(
                 c: Canvas,
                 recyclerView: RecyclerView,
@@ -84,12 +86,7 @@ class SwipableListFragment : Fragment() {
             ) {
                 //1. Background color based upon direction swiped
 
-                val color = when {
-                    abs(dX) == 0f -> Color.WHITE
-                    abs(dX) < width / 3 -> Color.GRAY
-                    dX > width / 3 -> Color.RED
-                    else -> Color.GREEN
-                }
+                val color = MaterialColors.getColor(context!!, R.attr.delete_background_color, Color.RED)
 
                 val background = ColorDrawable(color)
                 background.setBounds(
@@ -98,6 +95,7 @@ class SwipableListFragment : Fragment() {
                     viewHolder.itemView.right,
                     viewHolder.itemView.bottom
                 )
+                background.alpha = adjustOpacityOnX(dX, width)
                 background.draw(c)
 
                 //2. Printing the icons
@@ -110,6 +108,10 @@ class SwipableListFragment : Fragment() {
                     viewHolder.itemView.top + deleteIcon.intrinsicHeight
                             + textMargin + 8.dp
                 )
+
+                // change delete icon color
+                val iconColor = MaterialColors.getColor(context!!, com.google.android.material.R.attr.colorOnPrimary, Color.RED)
+                deleteIcon.colorFilter = BlendModeColorFilter(iconColor, BlendMode.SRC_ATOP)
 
                 //3. Drawing icon based upon direction swiped
                 if (dX > 0) deleteIcon.draw(c) //else archiveIcon.draw(canvas)
@@ -129,6 +131,12 @@ class SwipableListFragment : Fragment() {
         swipeHelper.attachToRecyclerView(binding.cardListView)
 
         return binding.root
+    }
+
+    fun adjustOpacityOnX(x: Float, width: Int): Int{
+        val opacity = (255 * abs(x) / width ).roundToInt() + 95
+
+        return if(opacity > 255) 255 else opacity
     }
 
     private val Int.dp
