@@ -1,6 +1,5 @@
 package com.example.spellscan.ui.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,14 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.example.spellscan.R
 import com.example.spellscan.databinding.FragmentCardThumbnailBinding
 import com.example.spellscan.logger.TAG
 import com.example.spellscan.model.Card
 import com.example.spellscan.repository.LocalCardRepository
-import com.example.spellscan.ui.CardListActivity
 import com.example.spellscan.ui.viewmodel.CardViewModel
 
 class CardThumbnailFragment : Fragment() {
@@ -33,7 +29,6 @@ class CardThumbnailFragment : Fragment() {
         binding = FragmentCardThumbnailBinding.inflate(inflater, container, false)
 
         binding?.addCardButton?.setOnClickListener { addCard() }
-        binding?.openListButton?.setOnClickListener { openListActivity() }
 
         val view = binding?.root
 
@@ -53,12 +48,6 @@ class CardThumbnailFragment : Fragment() {
             localCardRepository.save(it.copy())
             Log.i(TAG, "Added card: $it")
         }
-    }
-
-    private fun openListActivity() {
-        val intent = Intent(activity, CardListActivity::class.java)
-
-        startActivity(intent)
     }
 
     override fun onDestroyView() {

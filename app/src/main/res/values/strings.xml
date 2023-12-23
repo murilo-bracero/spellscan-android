@@ -10,4 +10,6 @@
     <string name="add_button_text">Add</string>
     <string name="delete">Delete</string>
     <string name="find_all">Find All</string>
+    <string name="scan">Scan</string>
+    <string name="list">List</string>
 </resources>

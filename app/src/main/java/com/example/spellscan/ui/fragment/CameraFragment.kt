@@ -95,7 +95,9 @@ class CameraFragment : Fragment() {
     }
 
     private fun showCard(card: Card) {
-        cardViewModel.cardLiveData.value = card
+        if(isAdded) {
+            cardViewModel.cardLiveData.value = card
+        }
     }
 
     private fun addOnTouchFocus(camera: Camera) {

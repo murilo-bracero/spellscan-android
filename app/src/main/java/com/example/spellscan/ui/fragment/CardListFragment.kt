@@ -1,40 +1,43 @@
-package com.example.spellscan.ui
+package com.example.spellscan.ui.fragment
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
-import androidx.fragment.app.add
-import androidx.fragment.app.commit
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.spellscan.R
-import com.example.spellscan.databinding.ActivityCardListBinding
+import com.example.spellscan.databinding.FragmentCardListBinding
 import com.example.spellscan.logger.TAG
-import com.example.spellscan.model.Card
 import com.example.spellscan.model.newCard
 import com.example.spellscan.model.toCardRow
 import com.example.spellscan.repository.LocalCardRepository
 import com.example.spellscan.service.CardService
-import com.example.spellscan.ui.adapter.CardListAdapter
-import com.example.spellscan.ui.fragment.SwipableListFragment
 import com.example.spellscan.ui.viewmodel.CardDatasetViewModel
-import com.example.spellscan.ui.viewmodel.CardViewModel
 import kotlinx.coroutines.launch
 
-class CardListActivity : AppCompatActivity() {
-    private val cardDatasetViewModel: CardDatasetViewModel by viewModels()
+class CardListFragment : Fragment() {
 
-    private val localCardRepository = LocalCardRepository.getInstance()
+    private val cardDatasetViewModel: CardDatasetViewModel by activityViewModels()
+
+    private lateinit var localCardRepository: LocalCardRepository
     private lateinit var cardService: CardService
-
-    private lateinit var binding: ActivityCardListBinding
+    private lateinit var binding: FragmentCardListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCardListBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        localCardRepository = LocalCardRepository.getInstance()
+        cardService = CardService.newInstance()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        // Inflate the layout for this fragment
+        binding = FragmentCardListBinding.inflate(layoutInflater, container, false)
 
         cardDatasetViewModel.setCardList(localCardRepository
             .findAll()
@@ -48,7 +51,7 @@ class CardListActivity : AppCompatActivity() {
             onFindAllButtonClicked()
         }
 
-        cardService = CardService.newInstance()
+        return binding.root
     }
 
     private fun onDeleteButtonClicked() {

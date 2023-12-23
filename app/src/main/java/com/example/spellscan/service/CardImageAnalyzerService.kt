@@ -70,6 +70,7 @@ class CardImageAnalyzerService {
         return copy
             .first { it.text.length in 2..40 }
             .text
+            .replace("\n", " ")
     }
 
     private fun findCardType(textBlocks: List<TextBlock>): String {

@@ -40,7 +40,8 @@ class CardService(
 
     companion object {
         fun newInstance(): CardService {
-            val stub = GrpcConfig().getCardServiceGrpcStub()
+            val grpcConfig = GrpcConfig.getInstance()
+            val stub = grpcConfig.getCardServiceGrpcStub()
             return CardService(stub)
         }
     }
