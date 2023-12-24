@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -43,27 +42,30 @@ class CardListFragment : Fragment() {
             .findAll()
             .map { it.toCardRow() })
 
-        binding.deleteRowButton.setOnClickListener {
-            onDeleteButtonClicked()
+        binding.clearAllButton.setOnClickListener {
+            clearAll()
         }
 
         binding.findAllButton.setOnClickListener {
-            onFindAllButtonClicked()
+            findAll()
         }
 
+        cardDatasetViewModel.checkedLiveData.observe(viewLifecycleOwner) {
+            if (it) {
+                Log.i(TAG, "Has checked")
+            }
+
+            Log.i(TAG, "Observing")
+        }
         return binding.root
     }
 
-    private fun onDeleteButtonClicked() {
-        cardDatasetViewModel.getCheckedCards()
-            .map {
-                localCardRepository.deleteById(it.id)
-            }
-
-        cardDatasetViewModel.removeCheckedCards()
+    private fun clearAll() {
+        localCardRepository.reset()
+        cardDatasetViewModel.reset()
     }
 
-    private fun onFindAllButtonClicked() {
+    private fun findAll() {
         cardDatasetViewModel.getCheckedCards()
             .map {
                 lifecycleScope.launch {

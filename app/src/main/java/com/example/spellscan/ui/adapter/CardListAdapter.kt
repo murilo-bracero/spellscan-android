@@ -11,13 +11,14 @@ import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spellscan.R
 import com.example.spellscan.model.CardRow
+import com.example.spellscan.ui.viewmodel.CardDatasetViewModel
 
 @SuppressLint("NotifyDataSetChanged")
-class CardListAdapter(private val liveDataset: LiveData<MutableList<CardRow>>, lifecycleOwner: LifecycleOwner) :
+class CardListAdapter(private val cardDatasetViewModel: CardDatasetViewModel, lifecycleOwner: LifecycleOwner) :
     RecyclerView.Adapter<CardListAdapter.ViewHolder>() {
 
     init {
-        liveDataset.observe(lifecycleOwner) {
+        cardDatasetViewModel.cardLiveData.observe(lifecycleOwner) {
             notifyDataSetChanged()
         }
     }
@@ -41,20 +42,22 @@ class CardListAdapter(private val liveDataset: LiveData<MutableList<CardRow>>, l
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.card_row_item, parent, false)
 
-        val holder = ViewHolder(view)
-
-        holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
-            liveDataset.value!![holder.adapterPosition].isChecked = isChecked
-        }
-
-        return holder
+        return ViewHolder(view)
     }
 
-    override fun getItemCount() = liveDataset.value!!.size
+    override fun getItemCount() = cardDatasetViewModel.cardLiveData.value!!.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.cardName.text = liveDataset.value!![position].name
-        holder.cardType.text = liveDataset.value!![position].type
-        holder.cardSet.text = liveDataset.value!![position].set
+        val cardList = cardDatasetViewModel.cardLiveData.value!!
+
+        holder.cardName.text = cardList[position].name
+        holder.cardType.text = cardList[position].type
+        holder.cardSet.text = cardList[position].set
+
+        holder.checkbox.setOnCheckedChangeListener(null)
+        holder.checkbox.isChecked = cardList[position].isChecked
+        holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
+            cardDatasetViewModel.updateChecked(position, isChecked)
+        }
     }
 }

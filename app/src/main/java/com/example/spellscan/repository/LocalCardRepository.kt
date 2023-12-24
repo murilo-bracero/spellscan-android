@@ -14,16 +14,16 @@ class LocalCardRepository private constructor() {
         db[card.localId!!] = card
     }
 
-    fun findById(id: UUID): Card? {
-        return db[id]
-    }
-
     fun findAll(): ArrayList<Card> {
         return db.values.toCollection(ArrayList())
     }
 
     fun deleteById(id: UUID) {
         db.remove(id)
+    }
+
+    fun reset() {
+        db.clear()
     }
 
     companion object {

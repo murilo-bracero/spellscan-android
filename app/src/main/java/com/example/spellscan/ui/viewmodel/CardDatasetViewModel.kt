@@ -10,30 +10,46 @@ class CardDatasetViewModel : ViewModel() {
         MutableLiveData<MutableList<CardRow>>()
     }
 
+    val checkedLiveData: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
+
     fun setCardList(cardList: List<CardRow>) {
         cardLiveData.value = cardList.toMutableList()
     }
 
     fun removeByIndex(index: Int): CardRow? {
-        if(cardLiveData.value == null) {
+        if (cardLiveData.value == null) {
             return null
         }
         return cardLiveData.value!!.removeAt(index)
     }
 
-    fun removeCheckedCards() {
-        if(cardLiveData.value == null) {
+    fun updateChecked(index: Int, isChecked: Boolean) {
+        if (cardLiveData.value == null) {
             return
         }
-        cardLiveData.value = cardLiveData.value!!
-            .filter { !it.isChecked }
-            .toMutableList()
+        cardLiveData.value!![index].isChecked = isChecked
+
+        when {
+            checkedLiveData.value == null && isChecked -> checkedLiveData.value = true
+            checkedLiveData.value == false && isChecked -> checkedLiveData.value = true
+            checkedLiveData.value == true && getCheckedCards().isEmpty() -> checkedLiveData.value =
+                false
+
+            else -> checkedLiveData.value = null
+        }
+
     }
 
     fun getCheckedCards(): List<CardRow> {
-        if(cardLiveData.value == null) {
+        if (cardLiveData.value == null) {
             return emptyList()
         }
         return cardLiveData.value!!.filter { it.isChecked }
+    }
+
+    fun reset() {
+        cardLiveData.value = emptyList<CardRow>().toMutableList()
     }
 }

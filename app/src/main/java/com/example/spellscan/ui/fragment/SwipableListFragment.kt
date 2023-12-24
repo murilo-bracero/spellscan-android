@@ -8,7 +8,6 @@ import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spellscan.R
 import com.example.spellscan.databinding.FragmentSwipableListBinding
-import com.example.spellscan.logger.TAG
 import com.example.spellscan.repository.LocalCardRepository
 import com.example.spellscan.ui.adapter.CardListAdapter
 import com.example.spellscan.ui.viewmodel.CardDatasetViewModel
@@ -45,7 +43,7 @@ class SwipableListFragment : Fragment() {
 
         binding.cardListView.layoutManager = LinearLayoutManager(context)
 
-        val cardListAdapter = CardListAdapter(cardDatasetViewModel.cardLiveData, this)
+        val cardListAdapter = CardListAdapter(cardDatasetViewModel, this)
         binding.cardListView.adapter = cardListAdapter
 
         val displayMetrics = resources.displayMetrics

@@ -12,4 +12,5 @@
     <string name="find_all">Find All</string>
     <string name="scan">Scan</string>
     <string name="list">List</string>
+    <string name="clear">Clear</string>
 </resources>

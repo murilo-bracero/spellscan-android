@@ -33,7 +33,9 @@
                     android:text="Card Name Placeholder Text"
                     android:layout_margin="3dp"
                     android:maxWidth="200dp"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    android:textSize="18sp"/>
 
                 <TextView
                     android:id="@+id/cardTypeRowText"
@@ -42,7 +44,9 @@
                     android:text="Card Type Placeholder Text"
                     android:layout_margin="3dp"
                     android:maxWidth="200dp"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:textStyle="italic"
+                    android:textSize="15sp"/>
 
                 <TextView
                     android:id="@+id/cardSetRowText"
@@ -52,10 +56,12 @@
                     android:text="Card Set Placeholder Text"
                     android:layout_margin="3dp"
                     android:maxWidth="200dp"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:textStyle="italic"
+                    android:textSize="15sp"/>
             </LinearLayout>
 
-            <CheckBox
+            <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/cardRowCheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
