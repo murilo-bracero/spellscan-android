@@ -2,7 +2,6 @@ package com.example.spellscan.config
 
 import com.example.spellscan.BuildConfig.BACKEND_HOST
 import com.example.spellscan.BuildConfig.BACKEND_PORT
-import com.example.spellscan.repository.LocalCardRepository
 import com.spellscan.proto.CardServiceGrpc
 import com.spellscan.proto.CardServiceGrpc.CardServiceFutureStub
 import io.grpc.ManagedChannel

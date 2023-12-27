@@ -1,5 +1,6 @@
 package com.example.spellscan.ui.fragment
 
+import android.annotation.SuppressLint
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
 import android.graphics.Canvas
@@ -21,7 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spellscan.R
 import com.example.spellscan.databinding.FragmentSwipableListBinding
-import com.example.spellscan.repository.LocalCardRepository
 import com.example.spellscan.ui.adapter.CardListAdapter
 import com.example.spellscan.ui.viewmodel.CardDatasetViewModel
 import com.google.android.material.color.MaterialColors
@@ -30,8 +30,6 @@ import kotlin.math.roundToInt
 
 class SwipableListFragment : Fragment() {
     private val cardDatasetViewModel: CardDatasetViewModel by activityViewModels()
-
-    private val localCardRepository = LocalCardRepository.getInstance()
 
     private lateinit var binding: FragmentSwipableListBinding
 
@@ -67,10 +65,7 @@ class SwipableListFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 if (direction == ItemTouchHelper.RIGHT) {
                     val pos = viewHolder.adapterPosition
-                    cardDatasetViewModel.removeByIndex(pos)?.let {
-                        localCardRepository.deleteById(it.id)
-                        cardListAdapter.notifyItemRemoved(pos)
-                    }
+                    cardDatasetViewModel.removeByIndex(pos)
                 }
             }
 
@@ -139,6 +134,11 @@ class SwipableListFragment : Fragment() {
         val opacity = (255 * abs(x) / width ).roundToInt() + 95
 
         return if(opacity > 255) 255 else opacity
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun forceUpdate() {
+        binding.cardListView.adapter?.notifyDataSetChanged()
     }
 
     private val Int.dp

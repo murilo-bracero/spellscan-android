@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/clear_list_action"
+        android:enabled="true"
+        android:icon="@drawable/clear_all_icon"
+        android:title="@string/clear_list"/>
+    <item
+        android:id="@+id/find_all_action"
+        android:enabled="true"
+        android:icon="@drawable/find_all_icon"
+        android:title="@string/find_all"/>
+</menu>

@@ -12,5 +12,6 @@
     <string name="find_all">Find All</string>
     <string name="scan">Scan</string>
     <string name="list">List</string>
-    <string name="clear">Clear</string>
+    <string name="clear_list">Clear List</string>
+    <string name="remove_all_number_selected">Remove all ($number selected)</string>
 </resources>

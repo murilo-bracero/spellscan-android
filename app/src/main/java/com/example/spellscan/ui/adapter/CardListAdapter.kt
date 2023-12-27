@@ -7,10 +7,8 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spellscan.R
-import com.example.spellscan.model.CardRow
 import com.example.spellscan.ui.viewmodel.CardDatasetViewModel
 
 @SuppressLint("NotifyDataSetChanged")
@@ -57,7 +55,7 @@ class CardListAdapter(private val cardDatasetViewModel: CardDatasetViewModel, li
         holder.checkbox.setOnCheckedChangeListener(null)
         holder.checkbox.isChecked = cardList[position].isChecked
         holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
-            cardDatasetViewModel.updateChecked(position, isChecked)
+            cardDatasetViewModel.setIsChecked(position, isChecked)
         }
     }
 }

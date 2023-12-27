@@ -11,25 +11,41 @@
         android:orientation="horizontal">
 
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/clear_all_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:text="@string/clear"
-            app:icon="@drawable/clear_all_icon" />
+        <!--TODO: search bar-->
 
         <Space
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="1" />
 
+        <ImageButton
+            android:id="@+id/list_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/settings_icon"
+            android:layout_marginEnd="16dp"
+            android:layout_gravity="center"
+            android:padding="6dp"
+            app:tint="@color/material_dynamic_primary60"
+            android:background="@drawable/roundcorner"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/find_all_button"
+            android:id="@+id/remove_selected_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:text="@string/find_all" />
+            android:backgroundTint="@color/material_dynamic_primary60"
+            android:text="@string/remove_all_number_selected"
+            app:cornerRadius="16dp" />
 
     </LinearLayout>
 

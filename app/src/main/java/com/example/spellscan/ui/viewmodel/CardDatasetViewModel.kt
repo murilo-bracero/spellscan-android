@@ -3,43 +3,47 @@ package com.example.spellscan.ui.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.spellscan.model.CardRow
+import com.example.spellscan.model.toCardRow
+import com.example.spellscan.repository.LocalCardRepository
 
-class CardDatasetViewModel : ViewModel() {
+class CardDatasetViewModel: ViewModel() {
+
+    private val localCardRepository = LocalCardRepository.getInstance()
 
     val cardLiveData: MutableLiveData<MutableList<CardRow>> by lazy {
         MutableLiveData<MutableList<CardRow>>()
     }
 
-    val checkedLiveData: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
+    val checkedLiveData: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>(0)
     }
 
-    fun setCardList(cardList: List<CardRow>) {
-        cardLiveData.value = cardList.toMutableList()
+    fun fetchAll() {
+        cardLiveData.value = localCardRepository
+            .findAll()
+            .map { it.toCardRow() }
+            .toMutableList()
     }
 
-    fun removeByIndex(index: Int): CardRow? {
+    fun removeByIndex(index: Int) {
         if (cardLiveData.value == null) {
-            return null
+            return
         }
-        return cardLiveData.value!!.removeAt(index)
+
+        cardLiveData.value!!.removeAt(index)
+            .let {
+                localCardRepository.deleteById(it.id)
+                updateCheckedLiveData()
+            }
     }
 
-    fun updateChecked(index: Int, isChecked: Boolean) {
+    fun setIsChecked(index: Int, isChecked: Boolean) {
         if (cardLiveData.value == null) {
             return
         }
         cardLiveData.value!![index].isChecked = isChecked
 
-        when {
-            checkedLiveData.value == null && isChecked -> checkedLiveData.value = true
-            checkedLiveData.value == false && isChecked -> checkedLiveData.value = true
-            checkedLiveData.value == true && getCheckedCards().isEmpty() -> checkedLiveData.value =
-                false
-
-            else -> checkedLiveData.value = null
-        }
-
+        updateCheckedLiveData()
     }
 
     fun getCheckedCards(): List<CardRow> {
@@ -49,7 +53,23 @@ class CardDatasetViewModel : ViewModel() {
         return cardLiveData.value!!.filter { it.isChecked }
     }
 
+    fun clearSelected() {
+        if (cardLiveData.value == null) {
+            return
+        }
+        cardLiveData.value!!.forEach {
+            it.isChecked = false
+        }
+        updateCheckedLiveData()
+    }
+
     fun reset() {
+        localCardRepository.reset()
         cardLiveData.value = emptyList<CardRow>().toMutableList()
+        updateCheckedLiveData()
+    }
+
+    private fun updateCheckedLiveData(){
+        checkedLiveData.value = getCheckedCards().size
     }
 }
