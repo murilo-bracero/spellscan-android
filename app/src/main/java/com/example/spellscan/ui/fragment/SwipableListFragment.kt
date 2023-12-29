@@ -62,10 +62,12 @@ class SwipableListFragment : Fragment() {
                 target: RecyclerView.ViewHolder
             ): Boolean = true
 
+            @SuppressLint("NotifyDataSetChanged")
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 if (direction == ItemTouchHelper.RIGHT) {
                     val pos = viewHolder.adapterPosition
                     cardDatasetViewModel.removeByIndex(pos)
+                    cardListAdapter.notifyDataSetChanged()
                 }
             }
 

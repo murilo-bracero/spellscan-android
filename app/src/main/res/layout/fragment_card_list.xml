@@ -47,6 +47,20 @@
             android:text="@string/remove_all_number_selected"
             app:cornerRadius="16dp" />
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cancel_selection_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:backgroundTint="@color/material_dynamic_neutral70"
+            android:text="@string/cancel"
+            app:cornerRadius="16dp" />
+
     </LinearLayout>
 
     <androidx.fragment.app.FragmentContainerView

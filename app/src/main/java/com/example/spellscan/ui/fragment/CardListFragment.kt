@@ -46,16 +46,22 @@ class CardListFragment : Fragment() {
         }
 
         binding.removeSelectedButton.setOnClickListener {
-            clearSelected()
+            removeChecked()
+        }
+
+        binding.cancelSelectionButton.setOnClickListener {
+            cancelSelection()
         }
 
         cardDatasetViewModel.checkedLiveData.observe(viewLifecycleOwner) {
             if (it > 0) {
                 binding.removeSelectedButton.visibility = View.VISIBLE
+                binding.cancelSelectionButton.visibility = View.VISIBLE
                 val buttonText = getString(R.string.remove_all_number_selected)
                 binding.removeSelectedButton.text = buttonText.replace("\$number", "${cardDatasetViewModel.getCheckedCards().size}")
             } else {
                 binding.removeSelectedButton.visibility = View.GONE
+                binding.cancelSelectionButton.visibility = View.GONE
             }
         }
         return binding.root
@@ -78,6 +84,7 @@ class CardListFragment : Fragment() {
                 else -> false
             }
         }
+        popup.setForceShowIcon(true)
         popup.show()
     }
 
@@ -96,7 +103,13 @@ class CardListFragment : Fragment() {
             }
     }
 
-    private fun clearSelected() {
+    private fun removeChecked() {
+        cardDatasetViewModel.removeChecked()
+        binding.swipableListFragmentContainer.getFragment<SwipableListFragment>()
+            .forceUpdate()
+    }
+
+    private fun cancelSelection() {
         cardDatasetViewModel.clearSelected()
         binding.swipableListFragmentContainer.getFragment<SwipableListFragment>()
             .forceUpdate()

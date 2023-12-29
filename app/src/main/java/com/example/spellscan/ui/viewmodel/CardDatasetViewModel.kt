@@ -63,6 +63,16 @@ class CardDatasetViewModel: ViewModel() {
         updateCheckedLiveData()
     }
 
+    fun removeChecked() {
+        if (cardLiveData.value == null) {
+            return
+        }
+        cardLiveData.value!!.removeIf {
+            it.isChecked
+        }
+        updateCheckedLiveData()
+    }
+
     fun reset() {
         localCardRepository.reset()
         cardLiveData.value = emptyList<CardRow>().toMutableList()
