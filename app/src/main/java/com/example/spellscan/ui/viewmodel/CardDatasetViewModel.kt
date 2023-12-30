@@ -25,6 +25,13 @@ class CardDatasetViewModel: ViewModel() {
             .toMutableList()
     }
 
+    fun findByIndex(index: Int): CardRow? {
+        if (cardLiveData.value == null) {
+            return null
+        }
+        return cardLiveData.value!![index]
+    }
+
     fun removeByIndex(index: Int) {
         if (cardLiveData.value == null) {
             return

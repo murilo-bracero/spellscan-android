@@ -14,6 +14,8 @@
         <!-- Customize your theme here. -->
         <item name="delete_background_color">@color/red_700</item>
 
+        <item name="search_background_color">@color/blue_700</item>
+
         <item name="checkboxStyle">@style/Widget.App.CheckBox</item>
     </style>
 

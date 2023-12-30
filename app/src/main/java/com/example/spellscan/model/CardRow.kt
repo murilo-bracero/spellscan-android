@@ -8,4 +8,8 @@ data class CardRow(
     val type: String,
     val set: String,
     var isChecked: Boolean
-)
+) {
+    fun toCard(): Card {
+        return Card(id, name, type, set)
+    }
+}

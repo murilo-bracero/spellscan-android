@@ -3,9 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.SwipableListFragment">
+    tools:context=".ui.fragment.component.LocalCardListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cardListView"
         android:layout_width="match_parent"

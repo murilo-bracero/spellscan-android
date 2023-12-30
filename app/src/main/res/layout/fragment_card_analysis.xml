@@ -7,7 +7,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/cameraFragmentContainerView"
-        android:name="com.example.spellscan.ui.fragment.CameraFragment"
+        android:name="com.example.spellscan.ui.fragment.component.CameraFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -38,7 +38,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/cardThumbnailFragmentContainer"
-        android:name="com.example.spellscan.ui.fragment.CardThumbnailFragment"
+        android:name="com.example.spellscan.ui.fragment.component.CardThumbnailFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

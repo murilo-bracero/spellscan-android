@@ -65,7 +65,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/swipableListFragmentContainer"
-        android:name="com.example.spellscan.ui.fragment.SwipableListFragment"
+        android:name="com.example.spellscan.ui.fragment.component.LocalCardListFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

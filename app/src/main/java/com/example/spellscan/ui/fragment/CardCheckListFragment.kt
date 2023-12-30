@@ -11,19 +11,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.spellscan.R
-import com.example.spellscan.databinding.FragmentCardListBinding
+import com.example.spellscan.databinding.FragmentCardCheckListBinding
 import com.example.spellscan.logger.TAG
 import com.example.spellscan.model.newCard
 import com.example.spellscan.service.CardService
+import com.example.spellscan.ui.fragment.component.LocalCardListFragment
 import com.example.spellscan.ui.viewmodel.CardDatasetViewModel
 import kotlinx.coroutines.launch
 
-class CardListFragment : Fragment() {
+class CardCheckListFragment : Fragment() {
 
     private val cardDatasetViewModel: CardDatasetViewModel by activityViewModels()
 
     private lateinit var cardService: CardService
-    private lateinit var binding: FragmentCardListBinding
+    private lateinit var binding: FragmentCardCheckListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +36,7 @@ class CardListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = FragmentCardListBinding.inflate(layoutInflater, container, false)
+        binding = FragmentCardCheckListBinding.inflate(layoutInflater, container, false)
 
         binding.removeSelectedButton.visibility = View.GONE
 
@@ -58,7 +59,8 @@ class CardListFragment : Fragment() {
                 binding.removeSelectedButton.visibility = View.VISIBLE
                 binding.cancelSelectionButton.visibility = View.VISIBLE
                 val buttonText = getString(R.string.remove_all_number_selected)
-                binding.removeSelectedButton.text = buttonText.replace("\$number", "${cardDatasetViewModel.getCheckedCards().size}")
+                binding.removeSelectedButton.text =
+                    buttonText.replace("\$number", "${cardDatasetViewModel.getCheckedCards().size}")
             } else {
                 binding.removeSelectedButton.visibility = View.GONE
                 binding.cancelSelectionButton.visibility = View.GONE
@@ -67,7 +69,7 @@ class CardListFragment : Fragment() {
         return binding.root
     }
 
-    private fun showPopup(v: View){
+    private fun showPopup(v: View) {
         val popup = PopupMenu(requireContext(), v)
         val inflater: MenuInflater = popup.menuInflater
         inflater.inflate(R.menu.card_list_menu, popup.menu)
@@ -77,10 +79,12 @@ class CardListFragment : Fragment() {
                     clearAll()
                     return@setOnMenuItemClickListener true
                 }
+
                 R.id.find_all_action -> {
                     findAll()
                     return@setOnMenuItemClickListener true
                 }
+
                 else -> false
             }
         }
@@ -105,13 +109,13 @@ class CardListFragment : Fragment() {
 
     private fun removeChecked() {
         cardDatasetViewModel.removeChecked()
-        binding.swipableListFragmentContainer.getFragment<SwipableListFragment>()
+        binding.swipableListFragmentContainer.getFragment<LocalCardListFragment>()
             .forceUpdate()
     }
 
     private fun cancelSelection() {
         cardDatasetViewModel.clearSelected()
-        binding.swipableListFragmentContainer.getFragment<SwipableListFragment>()
+        binding.swipableListFragmentContainer.getFragment<LocalCardListFragment>()
             .forceUpdate()
     }
 }

@@ -1,4 +1,4 @@
-package com.example.spellscan.ui.fragment
+package com.example.spellscan.ui.fragment.component
 
 import android.os.Bundle
 import android.util.Log
@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraInfoUnavailableException
 import androidx.camera.core.CameraSelector
@@ -19,7 +18,6 @@ import androidx.camera.core.SurfaceOrientedMeteringPointFactory
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import com.example.spellscan.R
 import com.example.spellscan.analyzer.CardImageAnalyzer
 import com.example.spellscan.databinding.FragmentCameraBinding
 import com.example.spellscan.logger.TAG

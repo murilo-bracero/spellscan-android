@@ -2,14 +2,13 @@ package com.example.spellscan.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.spellscan.R
 import com.example.spellscan.databinding.ActivityMainBinding
 import com.example.spellscan.provider.PermissionsProvider
 import com.example.spellscan.ui.fragment.CardAnalysisFragment
-import com.example.spellscan.ui.fragment.CardListFragment
+import com.example.spellscan.ui.fragment.CardCheckListFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -38,8 +37,8 @@ class MainActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
 
-                R.id.list_item -> {
-                    if (binding.bottomNavigationView.selectedItemId != R.id.list_item) {
+                R.id.check_list_item -> {
+                    if (binding.bottomNavigationView.selectedItemId != R.id.check_list_item) {
                         renderCardListFragment(savedInstanceState)
                     }
                     return@setOnItemSelectedListener true
@@ -63,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                replace<CardListFragment>(R.id.screen_fragment_container_view)
+                replace<CardCheckListFragment>(R.id.screen_fragment_container_view)
             }
         }
     }

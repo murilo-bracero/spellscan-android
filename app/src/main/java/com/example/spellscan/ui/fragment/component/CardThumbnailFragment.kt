@@ -1,4 +1,4 @@
-package com.example.spellscan.ui.fragment
+package com.example.spellscan.ui.fragment.component
 
 import android.os.Bundle
 import android.view.LayoutInflater
