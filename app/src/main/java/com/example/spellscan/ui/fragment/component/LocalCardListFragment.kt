@@ -27,9 +27,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.spellscan.R
 import com.example.spellscan.databinding.FragmentLocalCardListBinding
 import com.example.spellscan.logger.TAG
-import com.example.spellscan.ui.adapter.CardListAdapter
+import com.example.spellscan.ui.adapter.CardCheckListAdapter
 import com.example.spellscan.ui.viewmodel.CardDatasetViewModel
-import com.example.spellscan.ui.viewmodel.CardSearchViewModel
+import com.example.spellscan.ui.viewmodel.CardServiceViewModel
 import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -37,7 +37,7 @@ import kotlin.math.roundToInt
 
 class LocalCardListFragment : Fragment() {
     private val cardDatasetViewModel: CardDatasetViewModel by activityViewModels()
-    private val cardSearchViewModel: CardSearchViewModel by activityViewModels()
+    private val cardServiceViewModel: CardServiceViewModel by activityViewModels()
 
     private lateinit var binding: FragmentLocalCardListBinding
 
@@ -49,8 +49,8 @@ class LocalCardListFragment : Fragment() {
 
         binding.cardListView.layoutManager = LinearLayoutManager(context)
 
-        val cardListAdapter = CardListAdapter(cardDatasetViewModel, this)
-        binding.cardListView.adapter = cardListAdapter
+        val cardCheckListAdapter = CardCheckListAdapter(cardDatasetViewModel, this)
+        binding.cardListView.adapter = cardCheckListAdapter
 
         val displayMetrics = resources.displayMetrics
         val width = (displayMetrics.widthPixels / displayMetrics.density).toInt().dp
@@ -87,8 +87,11 @@ class LocalCardListFragment : Fragment() {
                     cardDatasetViewModel.findByIndex(pos)
                         ?.let { card ->
                             lifecycleScope.launch {
-                                val res = cardSearchViewModel.search(card)
+                                val res = cardServiceViewModel.search(card)
                                 Log.i(TAG, "card response: $res")
+                                cardServiceViewModel.save(res)
+                                cardDatasetViewModel.removeByIndex(pos)
+                                forceUpdate()
                             }
                         }
                 }

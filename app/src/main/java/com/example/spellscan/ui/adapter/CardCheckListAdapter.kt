@@ -12,8 +12,11 @@ import com.example.spellscan.R
 import com.example.spellscan.ui.viewmodel.CardDatasetViewModel
 
 @SuppressLint("NotifyDataSetChanged")
-class CardListAdapter(private val cardDatasetViewModel: CardDatasetViewModel, lifecycleOwner: LifecycleOwner) :
-    RecyclerView.Adapter<CardListAdapter.ViewHolder>() {
+class CardCheckListAdapter(
+    private val cardDatasetViewModel: CardDatasetViewModel,
+    lifecycleOwner: LifecycleOwner
+) :
+    RecyclerView.Adapter<CardCheckListAdapter.ViewHolder>() {
 
     init {
         cardDatasetViewModel.cardLiveData.observe(lifecycleOwner) {

@@ -16,6 +16,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import java.util.UUID
 
 class CardServiceTest {
 
@@ -33,7 +34,7 @@ class CardServiceTest {
     @Test
     fun find_happyPath() = runTest {
         //given
-        val card = Card("name", "type", "set", "[name, type, set]")
+        val card = buildCard()
 
         //and
         `when`(stub.find(any())).thenReturn(Futures.immediateFuture(buildCardResponse()))
@@ -48,7 +49,7 @@ class CardServiceTest {
     @Test
     fun findAll_uniqueHappyPath() = runTest {
         //given
-        val cards = listOf(Card("name", "type", "set", "[name, type, set]"))
+        val cards = listOf(buildCard())
 
         //and
         `when`(stub.find(any())).thenReturn(Futures.immediateFuture(buildCardResponse()))

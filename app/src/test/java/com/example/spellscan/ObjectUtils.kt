@@ -2,6 +2,7 @@ package com.example.spellscan
 
 import com.example.spellscan.model.Card
 import com.spellscan.proto.CardResponse
+import java.util.UUID
 
 fun buildCardResponse(
     id: String = "bcd65dec-ec09-4fc2-833a-383c67454c44",
@@ -22,12 +23,13 @@ fun buildCardResponse(
     .build()
 
 fun buildCard(
+    id: UUID = UUID.randomUUID(),
     name: String = "Mestre da Caça de Tovolar",
     type: String = "Criatura - Humano Lobisomem",
     set: String = "MID",
 ): Card = Card(
+    id,
     name,
     type,
-    set,
-    "[$name, $type, $set]"
+    set
 )

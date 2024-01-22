@@ -3,10 +3,9 @@ package com.example.spellscan.repository
 import com.example.spellscan.model.Card
 import java.util.UUID
 
-class LocalCardRepository private constructor() {
-    private val db = HashMap<UUID, Card>()
+class LocalCardRepository : LocalRepository<UUID, Card>() {
 
-    fun save(card: Card) {
+    override fun save(card: Card) {
         if (card.localId == null) {
             card.localId = UUID.randomUUID()
         }
@@ -14,16 +13,8 @@ class LocalCardRepository private constructor() {
         db[card.localId!!] = card
     }
 
-    fun findAll(): ArrayList<Card> {
-        return db.values.toCollection(ArrayList())
-    }
-
     fun deleteById(id: UUID) {
         db.remove(id)
-    }
-
-    fun reset() {
-        db.clear()
     }
 
     companion object {
