@@ -16,6 +16,8 @@
 
         <item name="search_background_color">@color/blue_200</item>
 
+        <item name="border_color">@color/opaque_grey</item>
+
         <item name="checkboxStyle">@style/Widget.App.CheckBox</item>
     </style>
 
