@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -25,6 +26,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spellscan.R
+import com.example.spellscan.builder.SimpleCallbackBuilder
 import com.example.spellscan.databinding.FragmentLocalCardListBinding
 import com.example.spellscan.logger.TAG
 import com.example.spellscan.ui.adapter.CardCheckListAdapter
@@ -65,110 +67,110 @@ class LocalCardListFragment : Fragment() {
             context?.theme
         )
 
-        val swipeHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean = true
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        val callback = SimpleCallbackBuilder(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT)
+            .onSwipedStart { viewHolder, _ ->
                 val pos = viewHolder.adapterPosition
 
-                if (direction == ItemTouchHelper.RIGHT) {
-                    cardDatasetViewModel.removeByIndex(pos)
-                    forceUpdate()
-                }
+                cardDatasetViewModel.removeByIndex(pos)
+                forceUpdate()
+            }.onSwipedEnd { viewHolder, _ ->
+                val pos = viewHolder.adapterPosition
 
-                if (direction == ItemTouchHelper.LEFT) {
-                    cardDatasetViewModel.findByIndex(pos)
-                        ?.let { card ->
-                            lifecycleScope.launch {
-                                val res = cardServiceViewModel.search(card)
-                                Log.i(TAG, "card response: $res")
-                                cardServiceViewModel.save(res)
-                                cardDatasetViewModel.removeByIndex(pos)
-                                forceUpdate()
-                            }
+                cardDatasetViewModel.findByIndex(pos)
+                    ?.let { card ->
+                        lifecycleScope.launch {
+                            val res = cardServiceViewModel.search(card)
+                            Log.i(TAG, "card response: $res")
+                            cardServiceViewModel.save(res)
+                            cardDatasetViewModel.removeByIndex(pos)
+                            forceUpdate()
                         }
-                }
-            }
+                    }
+            }.onChildDraw { c, _, viewHolder, dX, _, _, _ ->
 
-            @RequiresApi(Build.VERSION_CODES.Q)
-            override fun onChildDraw(
-                c: Canvas,
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                dX: Float,
-                dY: Float,
-                actionState: Int,
-                isCurrentlyActive: Boolean
-            ) {
-                //1. Background color based upon direction swiped
+                drawTileBackground(c, viewHolder, dX, width)
 
-                val color = when {
-                    dX > 0 -> getMaterialColor(R.attr.delete_background_color, Color.RED)
-                    dX < 0 -> getMaterialColor(R.attr.search_background_color, Color.BLUE)
-                    else -> Color.TRANSPARENT
+                if (deleteIcon == null || searchIcon == null) {
+                    Log.w(TAG, "deleteIcon or searchIcon is null")
+                    return@onChildDraw
                 }
 
-                val background = ColorDrawable(color)
-                background.setBounds(
-                    viewHolder.itemView.left,
-                    viewHolder.itemView.top,
-                    viewHolder.itemView.right,
-                    viewHolder.itemView.bottom
-                )
-                background.alpha = adjustOpacityOnX(dX, width)
-                background.draw(c)
+                drawTileIcons(viewHolder, deleteIcon, searchIcon, width)
 
-                //2. Printing the icons
+                drawIconByDirection(c, dX, deleteIcon, searchIcon)
+            }.build()
 
-                val textMargin = 20.dp
-                deleteIcon!!.bounds = Rect(
-                    textMargin,
-                    viewHolder.itemView.top + textMargin + 8.dp,
-                    textMargin + deleteIcon.intrinsicWidth,
-                    viewHolder.itemView.top + deleteIcon.intrinsicHeight
-                            + textMargin + 8.dp
-                )
-
-                searchIcon!!.bounds = Rect(
-                    width - textMargin - searchIcon.intrinsicWidth,
-                    viewHolder.itemView.top + textMargin + 8.dp,
-                    width - textMargin,
-                    viewHolder.itemView.top + searchIcon.intrinsicHeight
-                            + textMargin + 8.dp
-                )
-
-                // change delete icon color
-                val iconColor =
-                    getMaterialColor(com.google.android.material.R.attr.colorOnPrimary, Color.WHITE)
-
-                deleteIcon.colorFilter = BlendModeColorFilter(iconColor, BlendMode.SRC_ATOP)
-                searchIcon.colorFilter = BlendModeColorFilter(iconColor, BlendMode.SRC_ATOP)
-
-                //3. Drawing icon based upon direction swiped
-                if (dX > 0) deleteIcon.draw(c) else searchIcon.draw(c)
-
-                super.onChildDraw(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
-            }
-        })
+        val swipeHelper = ItemTouchHelper(callback)
 
         swipeHelper.attachToRecyclerView(binding.cardListView)
 
         return binding.root
+    }
+
+    private fun drawTileBackground(
+        c: Canvas,
+        viewHolder: RecyclerView.ViewHolder,
+        dX: Float,
+        width: Int
+    ) {
+        val color = when {
+            dX > 0 -> getMaterialColor(R.attr.delete_background_color, Color.RED)
+            dX < 0 -> getMaterialColor(R.attr.search_background_color, Color.BLUE)
+            else -> Color.TRANSPARENT
+        }
+
+        ColorDrawable(color).also {
+            it.setBounds(
+                viewHolder.itemView.left,
+                viewHolder.itemView.top,
+                viewHolder.itemView.right,
+                viewHolder.itemView.bottom
+            )
+            it.alpha = adjustOpacityOnX(dX, width)
+            it.draw(c)
+        }
+    }
+
+    private fun drawTileIcons(
+        viewHolder: RecyclerView.ViewHolder,
+        deleteIcon: Drawable,
+        searchIcon: Drawable,
+        width: Int
+    ) {
+        val textMargin = 20.dp
+        deleteIcon.bounds = Rect(
+            textMargin,
+            viewHolder.itemView.top + textMargin + 8.dp,
+            textMargin + deleteIcon.intrinsicWidth,
+            viewHolder.itemView.top + deleteIcon.intrinsicHeight
+                    + textMargin + 8.dp
+        )
+
+        searchIcon.bounds = Rect(
+            width - textMargin - searchIcon.intrinsicWidth,
+            viewHolder.itemView.top + textMargin + 8.dp,
+            width - textMargin,
+            viewHolder.itemView.top + searchIcon.intrinsicHeight
+                    + textMargin + 8.dp
+        )
+
+        updateIconColor(deleteIcon, searchIcon)
+    }
+
+    private fun updateIconColor(deleteIcon: Drawable, searchIcon: Drawable) {
+        getMaterialColor(com.google.android.material.R.attr.colorOnPrimary, Color.WHITE).also {
+            deleteIcon.colorFilter = BlendModeColorFilter(it, BlendMode.SRC_ATOP)
+            searchIcon.colorFilter = BlendModeColorFilter(it, BlendMode.SRC_ATOP)
+        }
+    }
+
+    private fun drawIconByDirection(
+        c: Canvas,
+        dX: Float,
+        deleteIcon: Drawable,
+        searchIcon: Drawable
+    ) {
+        if (dX > 0) deleteIcon.draw(c) else searchIcon.draw(c)
     }
 
     private fun getMaterialColor(
@@ -180,7 +182,7 @@ class LocalCardListFragment : Fragment() {
         defaultValue
     )
 
-    fun adjustOpacityOnX(x: Float, width: Int): Int {
+    private fun adjustOpacityOnX(x: Float, width: Int): Int {
         if (x == 0f) return 0
 
         val opacity = (255 * abs(x) / width).roundToInt() + 95

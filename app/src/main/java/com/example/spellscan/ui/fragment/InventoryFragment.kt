@@ -21,7 +21,6 @@ class InventoryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = FragmentInventoryBinding.inflate(layoutInflater, container, false)
 
         val dataset = cardServiceViewModel.findAll()
