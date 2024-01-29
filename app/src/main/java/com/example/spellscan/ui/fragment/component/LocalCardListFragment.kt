@@ -72,16 +72,7 @@ class LocalCardListFragment(
                 onCardSearch(viewHolder.adapterPosition)
             }
             .onChildDraw { c, viewHolder, dX ->
-                drawTileBackground(c, viewHolder, dX, width)
-
-                if (deleteIcon == null || searchIcon == null) {
-                    Log.w(TAG, "deleteIcon or searchIcon is null")
-                    return@onChildDraw
-                }
-
-                drawTileIcons(viewHolder, deleteIcon, searchIcon, width)
-
-                drawIconByDirection(c, dX, deleteIcon, searchIcon)
+                onChildDraw(c, viewHolder, dX, deleteIcon, searchIcon, width)
             }
             .build()
 
@@ -90,6 +81,19 @@ class LocalCardListFragment(
         swipeHelper.attachToRecyclerView(binding.cardListView)
 
         return binding.root
+    }
+
+    private fun onChildDraw(c: Canvas, viewHolder: RecyclerView.ViewHolder, dX: Float, deleteIcon: Drawable?, searchIcon: Drawable?, width: Int) {
+        drawTileBackground(c, viewHolder, dX, width)
+
+        if (deleteIcon == null || searchIcon == null) {
+            Log.w(TAG, "deleteIcon or searchIcon is null")
+            return
+        }
+
+        drawTileIcons(viewHolder, deleteIcon, searchIcon, width)
+
+        drawIconByDirection(c, dX, deleteIcon, searchIcon)
     }
 
     private fun drawTileBackground(

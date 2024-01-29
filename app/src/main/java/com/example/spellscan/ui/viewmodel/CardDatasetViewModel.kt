@@ -3,7 +3,6 @@ package com.example.spellscan.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import com.example.spellscan.model.CardRow
 import com.example.spellscan.model.toCardRow
 import com.example.spellscan.repository.LocalCardRepository

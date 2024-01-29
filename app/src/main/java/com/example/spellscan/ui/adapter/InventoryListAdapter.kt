@@ -4,13 +4,9 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.TextView
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spellscan.R
-import com.example.spellscan.ui.viewmodel.CardDatasetViewModel
-import com.example.spellscan.ui.viewmodel.CardServiceViewModel
 import com.spellscan.proto.CardResponse
 
 @SuppressLint("NotifyDataSetChanged")

@@ -11,7 +11,6 @@ import com.example.spellscan.databinding.FragmentInventoryBinding
 import com.example.spellscan.ui.adapter.InventoryListAdapter
 import com.example.spellscan.ui.viewmodel.CardServiceViewModel
 
-
 class InventoryFragment : Fragment() {
 
     private val cardServiceViewModel: CardServiceViewModel by activityViewModels()

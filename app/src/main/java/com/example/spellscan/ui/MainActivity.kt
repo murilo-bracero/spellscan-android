@@ -16,7 +16,6 @@ import com.example.spellscan.ui.fragment.CardAnalysisFragment
 import com.example.spellscan.ui.fragment.CardCheckListFragment
 import com.example.spellscan.ui.fragment.InventoryFragment
 
-
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
