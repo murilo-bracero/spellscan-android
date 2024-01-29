@@ -4,8 +4,11 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import coil.imageLoader
+import coil.request.ImageRequest
 import com.example.spellscan.R
 import com.spellscan.proto.CardResponse
 
@@ -19,11 +22,15 @@ class InventoryListAdapter(
         val cardSet: TextView
         val cardLang: TextView
 
+        val cardImage: ImageView
+
         init {
             // Define click listener for the ViewHolder's View.
             cardName = view.findViewById(R.id.card_row_name)
             cardSet = view.findViewById(R.id.card_row_set)
             cardLang = view.findViewById(R.id.card_row_lang)
+
+            cardImage = view.findViewById(R.id.card_row_image)
         }
     }
 
@@ -47,5 +54,11 @@ class InventoryListAdapter(
         holder.cardSet.text = dataSet[position].set
 
         // Apply image here
+        val imageLoader = holder.cardImage.context.imageLoader
+        val request = ImageRequest.Builder(holder.cardImage.context)
+            .data(dataSet[position].imageUrl)
+            .target(holder.cardImage)
+            .build()
+        imageLoader.enqueue(request)
     }
 }

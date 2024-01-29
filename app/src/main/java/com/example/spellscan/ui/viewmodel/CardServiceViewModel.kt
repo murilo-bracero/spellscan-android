@@ -22,5 +22,4 @@ class CardServiceViewModel: ViewModel() {
     fun findAll(): List<CardResponse> {
         return localCardResponseRepository.findAll()
     }
-
 }

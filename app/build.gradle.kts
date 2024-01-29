@@ -65,6 +65,7 @@ val grpc_version = "1.60.0"
 val protobuf_version = "3.25.1"
 val grpc_kotlin_stub_version = "1.4.1"
 val coroutines_version = "1.7.3"
+val coil_version = "2.5.0"
 
 dependencies {
 
@@ -100,6 +101,8 @@ dependencies {
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutines_version}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutines_version}")
+
+    implementation("io.coil-kt:coil:${coil_version}")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-inline:5.2.0")
