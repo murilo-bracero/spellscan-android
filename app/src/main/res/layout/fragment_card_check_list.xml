@@ -64,8 +64,7 @@
     </LinearLayout>
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/swipableListFragmentContainer"
-        android:name="com.example.spellscan.ui.fragment.component.LocalCardListFragment"
+        android:id="@+id/local_list_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -12,12 +12,12 @@ class SimpleCallbackBuilder(dragDirs: Int, swipeDirs: Int) {
         callback = Callback(dragDirs, swipeDirs)
     }
 
-    fun onSwipedStart(block: (viewHolder: RecyclerView.ViewHolder, direction: Int) -> Unit): SimpleCallbackBuilder {
+    fun onSwipedStart(block: (viewHolder: RecyclerView.ViewHolder) -> Unit): SimpleCallbackBuilder {
         callback.onSwipedStart = block
         return this
     }
 
-    fun onSwipedEnd(block: (viewHolder: RecyclerView.ViewHolder, direction: Int) -> Unit): SimpleCallbackBuilder {
+    fun onSwipedEnd(block: (viewHolder: RecyclerView.ViewHolder) -> Unit): SimpleCallbackBuilder {
         callback.onSwipedEnd = block
         return this
     }
@@ -25,12 +25,8 @@ class SimpleCallbackBuilder(dragDirs: Int, swipeDirs: Int) {
     fun onChildDraw(
         block: (
             c: Canvas,
-            recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
             dX: Float,
-            dY: Float,
-            actionState: Int,
-            isCurrentlyActive: Boolean
         ) -> Unit
     ): SimpleCallbackBuilder {
         callback.onChildDraw = block
@@ -49,16 +45,12 @@ class SimpleCallbackBuilder(dragDirs: Int, swipeDirs: Int) {
         swipeDirs
     ) {
 
-        var onSwipedStart: ((viewHolder: RecyclerView.ViewHolder, direction: Int) -> Unit)? = null
-        var onSwipedEnd: ((viewHolder: RecyclerView.ViewHolder, direction: Int) -> Unit)? = null
+        var onSwipedStart: ((viewHolder: RecyclerView.ViewHolder) -> Unit)? = null
+        var onSwipedEnd: ((viewHolder: RecyclerView.ViewHolder) -> Unit)? = null
         var onChildDraw: ((
             c: Canvas,
-            recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
             dX: Float,
-            dY: Float,
-            actionState: Int,
-            isCurrentlyActive: Boolean
         ) -> Unit)? = null
 
         override fun onMove(
@@ -69,11 +61,11 @@ class SimpleCallbackBuilder(dragDirs: Int, swipeDirs: Int) {
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             if (direction == ItemTouchHelper.RIGHT) {
-                onSwipedStart?.invoke(viewHolder, direction)
+                onSwipedStart?.invoke(viewHolder)
             }
 
             if (direction == ItemTouchHelper.LEFT) {
-                onSwipedEnd?.invoke(viewHolder, direction)
+                onSwipedEnd?.invoke(viewHolder)
             }
         }
 
@@ -86,7 +78,7 @@ class SimpleCallbackBuilder(dragDirs: Int, swipeDirs: Int) {
             actionState: Int,
             isCurrentlyActive: Boolean
         ) {
-            onChildDraw?.invoke(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            onChildDraw?.invoke(c, viewHolder, dX)
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
         }
     }

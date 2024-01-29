@@ -17,11 +17,13 @@ import com.example.spellscan.model.newCard
 import com.example.spellscan.service.CardService
 import com.example.spellscan.ui.fragment.component.LocalCardListFragment
 import com.example.spellscan.ui.viewmodel.CardDatasetViewModel
+import com.example.spellscan.ui.viewmodel.CardServiceViewModel
 import kotlinx.coroutines.launch
 
 class CardCheckListFragment : Fragment() {
 
     private val cardDatasetViewModel: CardDatasetViewModel by activityViewModels()
+    private val cardServiceViewModel: CardServiceViewModel by activityViewModels()
 
     private lateinit var cardService: CardService
     private lateinit var binding: FragmentCardCheckListBinding
@@ -35,8 +37,20 @@ class CardCheckListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.i(TAG, "onCreateView")
         // Inflate the layout for this fragment
         binding = FragmentCardCheckListBinding.inflate(layoutInflater, container, false)
+
+        if(savedInstanceState == null) {
+            childFragmentManager.beginTransaction()
+                .replace(R.id.local_list_fragment_container, LocalCardListFragment ({
+                    removeCardByIndex(it)
+                }, {
+                    searchCardByIndex(it)
+                    removeCardByIndex(it)
+                }))
+                .commit()
+        }
 
         binding.removeSelectedButton.visibility = View.GONE
 
@@ -66,7 +80,28 @@ class CardCheckListFragment : Fragment() {
                 binding.cancelSelectionButton.visibility = View.GONE
             }
         }
+
         return binding.root
+    }
+
+    private fun searchCardByIndex(index: Int) {
+        val card = cardDatasetViewModel.findByIndex(index)
+
+        if (card == null) {
+            Log.w(TAG, "card could not be found")
+            return
+        }
+
+        lifecycleScope.launch {
+            val found = cardServiceViewModel.search(card)
+            Log.i(TAG, "Card found: card=$card, found=$found")
+            cardServiceViewModel.save(found)
+        }
+    }
+
+    private fun removeCardByIndex(index: Int) {
+        cardDatasetViewModel.removeByIndex(index)
+        forceUpdate()
     }
 
     private fun showPopup(v: View) {
@@ -109,13 +144,15 @@ class CardCheckListFragment : Fragment() {
 
     private fun removeChecked() {
         cardDatasetViewModel.removeChecked()
-        binding.swipableListFragmentContainer.getFragment<LocalCardListFragment>()
-            .forceUpdate()
+        forceUpdate()
     }
 
     private fun cancelSelection() {
         cardDatasetViewModel.clearSelected()
-        binding.swipableListFragmentContainer.getFragment<LocalCardListFragment>()
-            .forceUpdate()
+        forceUpdate()
+    }
+
+    private fun forceUpdate() {
+        binding.localListFragmentContainer.getFragment<LocalCardListFragment>().forceUpdate()
     }
 }

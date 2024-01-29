@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -17,11 +16,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
-import androidx.annotation.RequiresApi
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,15 +28,15 @@ import com.example.spellscan.databinding.FragmentLocalCardListBinding
 import com.example.spellscan.logger.TAG
 import com.example.spellscan.ui.adapter.CardCheckListAdapter
 import com.example.spellscan.ui.viewmodel.CardDatasetViewModel
-import com.example.spellscan.ui.viewmodel.CardServiceViewModel
 import com.google.android.material.color.MaterialColors
-import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-class LocalCardListFragment : Fragment() {
+class LocalCardListFragment(
+    private val onCardDeleted: (Int) -> Unit,
+    private val onCardSearch: (Int) -> Unit
+) : Fragment() {
     private val cardDatasetViewModel: CardDatasetViewModel by activityViewModels()
-    private val cardServiceViewModel: CardServiceViewModel by activityViewModels()
 
     private lateinit var binding: FragmentLocalCardListBinding
 
@@ -68,26 +65,13 @@ class LocalCardListFragment : Fragment() {
         )
 
         val callback = SimpleCallbackBuilder(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT)
-            .onSwipedStart { viewHolder, _ ->
-                val pos = viewHolder.adapterPosition
-
-                cardDatasetViewModel.removeByIndex(pos)
-                forceUpdate()
-            }.onSwipedEnd { viewHolder, _ ->
-                val pos = viewHolder.adapterPosition
-
-                cardDatasetViewModel.findByIndex(pos)
-                    ?.let { card ->
-                        lifecycleScope.launch {
-                            val res = cardServiceViewModel.search(card)
-                            Log.i(TAG, "card response: $res")
-                            cardServiceViewModel.save(res)
-                            cardDatasetViewModel.removeByIndex(pos)
-                            forceUpdate()
-                        }
-                    }
-            }.onChildDraw { c, _, viewHolder, dX, _, _, _ ->
-
+            .onSwipedStart { viewHolder ->
+                onCardDeleted(viewHolder.adapterPosition)
+            }
+            .onSwipedEnd { viewHolder ->
+                onCardSearch(viewHolder.adapterPosition)
+            }
+            .onChildDraw { c, viewHolder, dX ->
                 drawTileBackground(c, viewHolder, dX, width)
 
                 if (deleteIcon == null || searchIcon == null) {
@@ -98,7 +82,8 @@ class LocalCardListFragment : Fragment() {
                 drawTileIcons(viewHolder, deleteIcon, searchIcon, width)
 
                 drawIconByDirection(c, dX, deleteIcon, searchIcon)
-            }.build()
+            }
+            .build()
 
         val swipeHelper = ItemTouchHelper(callback)
 
