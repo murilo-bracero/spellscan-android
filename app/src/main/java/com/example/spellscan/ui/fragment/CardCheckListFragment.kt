@@ -95,7 +95,6 @@ class CardCheckListFragment : Fragment() {
         lifecycleScope.launch {
             val found = cardServiceViewModel.search(card)
             Log.i(TAG, "Card found: card=$card, found=$found")
-            cardServiceViewModel.save(found)
         }
     }
 

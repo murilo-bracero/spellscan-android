@@ -4,6 +4,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.protobuf")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -66,6 +67,7 @@ val protobuf_version = "3.25.1"
 val grpc_kotlin_stub_version = "1.4.1"
 val coroutines_version = "1.7.3"
 val coil_version = "2.5.0"
+val room_version = "2.6.1"
 
 dependencies {
 
@@ -103,6 +105,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutines_version}")
 
     implementation("io.coil-kt:coil:${coil_version}")
+
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-inline:5.2.0")

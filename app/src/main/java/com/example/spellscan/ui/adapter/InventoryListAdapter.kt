@@ -10,11 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.example.spellscan.R
+import com.example.spellscan.db.entity.CardEntity
 import com.spellscan.proto.CardResponse
 
 @SuppressLint("NotifyDataSetChanged")
 class InventoryListAdapter(
-    private val dataSet: List<CardResponse>
+    private val dataSet: List<CardEntity>
 ) : RecyclerView.Adapter<InventoryListAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
