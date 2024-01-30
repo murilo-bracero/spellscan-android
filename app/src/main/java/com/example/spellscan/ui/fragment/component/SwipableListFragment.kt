@@ -18,38 +18,33 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spellscan.R
 import com.example.spellscan.builder.SimpleCallbackBuilder
-import com.example.spellscan.databinding.FragmentLocalCardListBinding
+import com.example.spellscan.databinding.FragmentSwipableListBinding
 import com.example.spellscan.logger.TAG
-import com.example.spellscan.ui.adapter.CardCheckListAdapter
-import com.example.spellscan.ui.viewmodel.CardDatasetViewModel
 import com.google.android.material.color.MaterialColors
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-class LocalCardListFragment(
+class SwipableListFragment(
+    private val adapter: RecyclerView.Adapter<*>,
     private val onCardDeleted: (Int) -> Unit,
     private val onCardSearch: (Int) -> Unit
 ) : Fragment() {
-    private val cardDatasetViewModel: CardDatasetViewModel by activityViewModels()
-
-    private lateinit var binding: FragmentLocalCardListBinding
+    private lateinit var binding: FragmentSwipableListBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentLocalCardListBinding.inflate(inflater, container, false)
+        binding = FragmentSwipableListBinding.inflate(inflater, container, false)
 
         binding.cardListView.layoutManager = LinearLayoutManager(context)
 
-        val cardCheckListAdapter = CardCheckListAdapter(cardDatasetViewModel, this)
-        binding.cardListView.adapter = cardCheckListAdapter
+        binding.cardListView.adapter = adapter
 
         val displayMetrics = resources.displayMetrics
         val width = (displayMetrics.widthPixels / displayMetrics.density).toInt().dp
@@ -83,7 +78,14 @@ class LocalCardListFragment(
         return binding.root
     }
 
-    private fun onChildDraw(c: Canvas, viewHolder: RecyclerView.ViewHolder, dX: Float, deleteIcon: Drawable?, searchIcon: Drawable?, width: Int) {
+    private fun onChildDraw(
+        c: Canvas,
+        viewHolder: RecyclerView.ViewHolder,
+        dX: Float,
+        deleteIcon: Drawable?,
+        searchIcon: Drawable?,
+        width: Int
+    ) {
         drawTileBackground(c, viewHolder, dX, width)
 
         if (deleteIcon == null || searchIcon == null) {

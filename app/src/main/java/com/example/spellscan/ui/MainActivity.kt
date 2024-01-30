@@ -13,8 +13,7 @@ import com.example.spellscan.R
 import com.example.spellscan.databinding.ActivityMainBinding
 import com.example.spellscan.provider.PermissionsProvider
 import com.example.spellscan.ui.fragment.CardAnalysisFragment
-import com.example.spellscan.ui.fragment.CardCheckListFragment
-import com.example.spellscan.ui.fragment.InventoryFragment
+import com.example.spellscan.ui.fragment.CardInventoryFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -49,14 +48,6 @@ class MainActivity : AppCompatActivity() {
                     }
                     return@setOnItemSelectedListener true
                 }
-
-                R.id.list_item -> {
-                    if (binding.bottomNavigationView.selectedItemId != R.id.list_item) {
-                        renderInventoryFragment(savedInstanceState)
-                    }
-                    return@setOnItemSelectedListener true
-                }
-
                 else -> false
             }
         }
@@ -75,16 +66,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                replace<CardCheckListFragment>(R.id.screen_fragment_container_view)
-            }
-        }
-    }
-
-    private fun renderInventoryFragment(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null) {
-            supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                replace<InventoryFragment>(R.id.screen_fragment_container_view)
+                replace<CardInventoryFragment>(R.id.screen_fragment_container_view)
             }
         }
     }

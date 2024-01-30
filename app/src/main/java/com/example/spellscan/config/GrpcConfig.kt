@@ -27,7 +27,6 @@ class GrpcConfig {
             .build()
     }
 
-
     companion object {
         @Volatile
         private var instance: GrpcConfig? = null

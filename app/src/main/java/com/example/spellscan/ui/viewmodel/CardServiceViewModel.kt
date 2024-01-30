@@ -6,7 +6,6 @@ import com.example.spellscan.db.entity.CardEntity
 import com.example.spellscan.model.CardRow
 import com.example.spellscan.repository.CardCacheRepository
 import com.example.spellscan.service.CardService
-import com.spellscan.proto.CardResponse
 
 class CardServiceViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -31,5 +30,9 @@ class CardServiceViewModel(application: Application) : AndroidViewModel(applicat
 
     suspend fun findAll(): List<CardEntity> {
         return cardCacheRepository.findAll()
+    }
+
+    suspend fun delete(card: CardEntity) {
+        cardCacheRepository.delete(card)
     }
 }

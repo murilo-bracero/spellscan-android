@@ -124,7 +124,7 @@ class CameraFragment : Fragment() {
                                 }.build()
                             )
                         } catch (e: CameraInfoUnavailableException) {
-                            Log.d("ERROR", "cannot access camera", e)
+                            Log.e(TAG, "cannot access camera", e)
                         }
                         true
                     }

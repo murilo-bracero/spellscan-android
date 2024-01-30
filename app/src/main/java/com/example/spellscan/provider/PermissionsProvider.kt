@@ -30,8 +30,6 @@ class PermissionsProvider(private val activity: AppCompatActivity) {
             }
 
             if (!permissionGranted) {
-                Log.e(TAG, "Permissions not granted")
-
                 Toast.makeText(
                     activity, "Permissions not granted", Toast.LENGTH_SHORT
                 ).show()

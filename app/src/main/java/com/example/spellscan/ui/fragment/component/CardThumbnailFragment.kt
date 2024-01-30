@@ -6,45 +6,46 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.example.spellscan.databinding.FragmentCardThumbnailBinding
-import com.example.spellscan.model.Card
+import com.example.spellscan.model.CardRow
+import com.example.spellscan.ui.viewmodel.CardServiceViewModel
 import com.example.spellscan.ui.viewmodel.CardViewModel
+import kotlinx.coroutines.launch
+import java.util.UUID
 
 class CardThumbnailFragment : Fragment() {
 
     private val cardViewModel: CardViewModel by activityViewModels()
+    private val cardServiceViewModel: CardServiceViewModel by activityViewModels()
 
-    private var binding: FragmentCardThumbnailBinding? = null
+    private lateinit var binding: FragmentCardThumbnailBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = FragmentCardThumbnailBinding.inflate(inflater, container, false)
 
-        binding?.addCardButton?.setOnClickListener { addCard() }
+        binding.addCardButton.setOnClickListener { addCard() }
 
-        val view = binding?.root
-
-        val cardObserver = Observer<Card> {
-            binding?.cardNameText?.text = it.name
-            binding?.cardTypeText?.text = it.type
-            binding?.cardSetText?.text = it.set
+        cardViewModel.cardLiveData.observe(viewLifecycleOwner) {
+            binding.cardNameText.text = it.name
+            binding.cardTypeText.text = it.type
+            binding.cardSetText.text = it.set
         }
 
-        cardViewModel.cardLiveData.observe(viewLifecycleOwner, cardObserver)
-
-        return view
+        return binding.root
     }
 
     private fun addCard() {
-        cardViewModel.save()
-    }
+        val card = cardViewModel.cardLiveData.value!!
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
+        val cardRow = CardRow(UUID.randomUUID(), card.name, card.type, card.set, false)
+
+        lifecycleScope.launch {
+            cardServiceViewModel.search(cardRow)
+        }
     }
 }

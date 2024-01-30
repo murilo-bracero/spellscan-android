@@ -42,6 +42,10 @@ class CardCacheRepository(context: Context) {
         return db.cardDao().findByNameAndTypeAndSet(name, type, set)
     }
 
+    suspend fun delete(card: CardEntity) {
+        db.cardDao().delete(card)
+    }
+
     companion object {
 
         @Volatile
