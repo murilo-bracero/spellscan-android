@@ -2,8 +2,7 @@ package com.example.spellscan.config
 
 import com.example.spellscan.BuildConfig.BACKEND_HOST
 import com.example.spellscan.BuildConfig.BACKEND_PORT
-import com.spellscan.proto.CardServiceGrpc
-import com.spellscan.proto.CardServiceGrpc.CardServiceFutureStub
+import com.spellscan.cardservice.CardServiceGrpc
 import io.grpc.ManagedChannel
 import io.grpc.okhttp.OkHttpChannelBuilder
 
@@ -11,7 +10,7 @@ class GrpcConfig {
 
     private var channel: ManagedChannel? = null
 
-    fun getCardServiceGrpcStub(): CardServiceFutureStub {
+    fun getCardServiceGrpcStub(): CardServiceGrpc.CardServiceFutureStub {
         startChannel()
         return CardServiceGrpc.newFutureStub(channel)
     }

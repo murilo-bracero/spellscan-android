@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.spellscan.db.CardCacheDatabase
 import com.example.spellscan.db.entity.CardEntity
-import com.spellscan.proto.CardResponse
+import com.spellscan.cardservice.CardResponse
 
 class CardCacheRepository(context: Context) {
 
@@ -16,6 +16,7 @@ class CardCacheRepository(context: Context) {
             CardCacheDatabase::class.java,
             "spellscan-database"
         )
+            .fallbackToDestructiveMigration()
             .build()
     }
 
@@ -24,14 +25,19 @@ class CardCacheRepository(context: Context) {
         val entity = CardEntity(
             card.id,
             card.name,
-            card.cost,
+            card.manaCost,
             card.type,
             card.set,
             card.lang,
-            card.imageUrl
+            card.imageUrl,
+            card.printedText
         )
 
         db.cardDao().save(entity)
+    }
+
+    suspend fun findById(id: String): CardEntity {
+        return db.cardDao().findById(id)
     }
 
     suspend fun findAll(): List<CardEntity> {

@@ -5,6 +5,7 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/clickable_card"
         android:layout_width="match_parent"
         android:layout_height="98dp"
         app:contentPaddingLeft="8dp"

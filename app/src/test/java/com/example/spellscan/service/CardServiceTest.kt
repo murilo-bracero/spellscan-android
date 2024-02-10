@@ -2,10 +2,8 @@ package com.example.spellscan.service
 
 import com.example.spellscan.buildCard
 import com.example.spellscan.buildCardResponse
-import com.example.spellscan.model.Card
 import com.google.common.util.concurrent.Futures
-import com.google.common.util.concurrent.ListenableFuture
-import com.spellscan.proto.CardServiceGrpc.CardServiceFutureStub
+import com.spellscan.cardservice.CardServiceGrpc
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
@@ -16,12 +14,11 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
-import java.util.UUID
 
 class CardServiceTest {
 
     @Mock
-    lateinit var stub: CardServiceFutureStub
+    lateinit var stub: CardServiceGrpc.CardServiceFutureStub
 
     lateinit var cardService: CardService
 

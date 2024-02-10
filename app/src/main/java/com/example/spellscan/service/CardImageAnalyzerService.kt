@@ -2,7 +2,6 @@ package com.example.spellscan.service
 
 import android.graphics.Point
 import com.example.spellscan.model.Card
-import com.example.spellscan.model.newCard
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.Text.TextBlock
 
@@ -26,7 +25,7 @@ class CardImageAnalyzerService {
 
         val cardSet = findCardSet(textBlocks)
 
-        val card = newCard(cardName, cardType, cardSet)
+        val card = Card(cardName, cardType, cardSet)
 
         onCardRecognized(card)
     }

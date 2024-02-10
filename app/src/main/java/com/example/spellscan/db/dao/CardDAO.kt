@@ -11,6 +11,9 @@ interface CardDAO {
     @Insert
     suspend fun save(card: CardEntity)
 
+    @Query("SELECT * FROM cards WHERE id = :id LIMIT 1")
+    suspend fun findById(id: String): CardEntity
+
     @Query("SELECT * FROM cards")
     suspend fun findAll(): List<CardEntity>
 

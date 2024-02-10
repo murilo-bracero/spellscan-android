@@ -1,7 +1,7 @@
 package com.example.spellscan
 
 import com.example.spellscan.model.Card
-import com.spellscan.proto.CardResponse
+import com.spellscan.cardservice.CardResponse
 import java.util.UUID
 
 fun buildCardResponse(
@@ -17,18 +17,16 @@ fun buildCardResponse(
     .setName(name)
     .setType(type)
     .setSet(set)
-    .setCost(cost)
+    .setManaCost(cost)
     .setImageUrl(imageUrl)
     .setLang(lang)
     .build()
 
 fun buildCard(
-    id: UUID = UUID.randomUUID(),
     name: String = "Mestre da Caça de Tovolar",
     type: String = "Criatura - Humano Lobisomem",
     set: String = "MID",
 ): Card = Card(
-    id,
     name,
     type,
     set

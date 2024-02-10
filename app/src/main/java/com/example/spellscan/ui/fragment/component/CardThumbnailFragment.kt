@@ -8,11 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.spellscan.databinding.FragmentCardThumbnailBinding
-import com.example.spellscan.model.CardRow
 import com.example.spellscan.ui.viewmodel.CardServiceViewModel
 import com.example.spellscan.ui.viewmodel.CardViewModel
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 class CardThumbnailFragment : Fragment() {
 
@@ -42,10 +40,8 @@ class CardThumbnailFragment : Fragment() {
     private fun addCard() {
         val card = cardViewModel.cardLiveData.value!!
 
-        val cardRow = CardRow(UUID.randomUUID(), card.name, card.type, card.set, false)
-
         lifecycleScope.launch {
-            cardServiceViewModel.search(cardRow)
+            cardServiceViewModel.search(card)
         }
     }
 }

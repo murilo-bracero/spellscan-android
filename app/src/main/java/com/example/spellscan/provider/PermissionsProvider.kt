@@ -14,11 +14,7 @@ class PermissionsProvider(private val activity: AppCompatActivity) {
     private val requiredPermissions =
         mutableListOf(
             Manifest.permission.CAMERA
-        ).apply {
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            }
-        }.toTypedArray()
+        ).toTypedArray()
 
     private val activityResultLauncher =
         activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { perms ->

@@ -2,14 +2,14 @@ package com.example.spellscan.service
 
 import com.example.spellscan.config.GrpcConfig
 import com.example.spellscan.model.Card
-import com.spellscan.proto.CardRequest
-import com.spellscan.proto.CardResponse
-import com.spellscan.proto.CardServiceGrpc.CardServiceFutureStub
+import com.spellscan.cardservice.CardRequest
+import com.spellscan.cardservice.CardResponse
+import com.spellscan.cardservice.CardServiceGrpc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class CardService(
-    private var stub: CardServiceFutureStub
+    private var stub: CardServiceGrpc.CardServiceFutureStub
 ) {
 
     suspend fun find(card: Card): CardResponse {

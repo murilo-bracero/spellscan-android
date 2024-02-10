@@ -84,10 +84,6 @@ class CardInventoryFragment : Fragment() {
                     return@setOnMenuItemClickListener true
                 }
 
-                R.id.find_all_action -> {
-                    return@setOnMenuItemClickListener true
-                }
-
                 else -> false
             }
         }

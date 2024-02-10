@@ -59,7 +59,7 @@ class SwipableListFragment(
             context?.theme
         )
 
-        val callback = SimpleCallbackBuilder(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT)
+        val callback = SimpleCallbackBuilder(0, ItemTouchHelper.RIGHT)
             .onSwipedStart { viewHolder ->
                 onCardDeleted(viewHolder.adapterPosition)
             }
