@@ -3,12 +3,13 @@ package com.example.spellscan.db.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.spellscan.db.entity.CardEntity
 
 @Dao
 interface CardDAO {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun save(card: CardEntity)
 
     @Query("SELECT * FROM cards WHERE id = :id LIMIT 1")

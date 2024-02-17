@@ -24,7 +24,7 @@ class CardServiceViewModel(application: Application) : AndroidViewModel(applicat
         return cardService.find(card).also {
             cardCacheRepository.save(it)
         }.let {
-            CardEntity(it.id, it.name, it.manaCost, it.type, it.set, it.lang, it.imageUrl, it.printedText)
+            CardEntity(it.id, it.name, it.manaCost, it.type, it.set, it.lang, it.imageUrl, it.artImageUrl, it.printedText)
         }
     }
 

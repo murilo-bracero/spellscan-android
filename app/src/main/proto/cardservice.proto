@@ -26,9 +26,23 @@ message CardResponse {
   string set = 5;
   string lang = 6;
   string imageUrl = 8;
-  string releasedAt = 9;
-  string printedText = 10;
-  repeated string colors = 11;
-  repeated string colorIdentity = 12;
-  repeated string keywords = 13;
+  string artImageUrl = 9;
+  string releasedAt = 10;
+  string printedText = 11;
+  repeated CardFaceResponse cardFaces = 12;
+  repeated string colors = 13;
+  repeated string colorIdentity = 14;
+  repeated string keywords = 15;
+}
+
+message CardFaceResponse {
+  string name = 1;
+  string manaCost = 2;
+  string typeLine = 3;
+  string printedText = 4;
+  string flavorText = 5;
+  string cardImage = 6;
+  string artImage = 7;
+  repeated string colors = 8;
+  repeated string colorIndicator = 9;
 }

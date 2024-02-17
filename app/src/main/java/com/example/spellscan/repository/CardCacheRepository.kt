@@ -30,6 +30,7 @@ class CardCacheRepository(context: Context) {
             card.set,
             card.lang,
             card.imageUrl,
+            card.artImageUrl,
             card.printedText
         )
 

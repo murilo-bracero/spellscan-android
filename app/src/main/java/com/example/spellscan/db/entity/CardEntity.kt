@@ -13,5 +13,6 @@ data class CardEntity(
     @ColumnInfo(name = "card_set") val set: String,
     val lang: String,
     @ColumnInfo(name = "image_url") val imageUrl: String,
+    @ColumnInfo(name = "art_image_url") val artImageUrl: String,
     @ColumnInfo(name = "printed_text") val printedText: String
 )
