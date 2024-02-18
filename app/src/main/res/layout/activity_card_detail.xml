@@ -10,7 +10,6 @@
         android:id="@+id/card_cover_container"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        app:layout_constraintBottom_toBottomOf="@+id/horizontal_headerline"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         android:background="@color/black">
@@ -55,20 +54,6 @@
         app:layout_constraintVertical_bias="0.060" />
 
     <TextView
-        android:id="@+id/card_detail_set"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:textStyle="bold|italic"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="15dp"
-        app:layout_constraintBottom_toBottomOf="@+id/horizontal_headerline"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_detail_type"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
         android:id="@+id/card_detail_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -76,26 +61,48 @@
         android:layout_marginTop="15dp"
         android:textSize="15sp"
         android:textStyle="bold|italic"
-        app:layout_constraintBottom_toBottomOf="@+id/horizontal_headerline"
+        app:layout_constraintBottom_toBottomOf="@+id/card_detail_set"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_detail_name"
         app:layout_constraintVertical_bias="0.0" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/horizontal_headerline"
+    <TextView
+        android:id="@+id/card_detail_set"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.50" />
+        android:textSize="15sp"
+        android:textStyle="bold|italic"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/card_detail_lang"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_detail_type"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/card_detail_lang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textStyle="bold|italic"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/card_detail_text"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_detail_set"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/card_detail_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:layout_marginHorizontal="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizontal_headerline"
+        app:layout_constraintTop_toBottomOf="@+id/card_detail_lang"
         app:layout_constraintVertical_bias="0.0" />
 
 
