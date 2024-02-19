@@ -77,7 +77,7 @@ class CardImageAnalyzerService {
     }
 
     private fun findCardSet(textBlocks: List<TextBlock>): String {
-        val regex = "^[A-Z]{3}".toRegex()
+        val regex = "^[A-Z0-9]{3}".toRegex()
         val setTextBlock = textBlocks.filter { regex.containsMatchIn(it.text) }
             .maxByOrNull { it.text.length }
 

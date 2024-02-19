@@ -28,36 +28,36 @@
 
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/card_detail_name"
+    <LinearLayout
+        android:id="@+id/card_cost_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:textSize="25sp"
-        android:textStyle="bold"
+        android:layout_marginHorizontal="40dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_cover_container"
         app:layout_constraintVertical_bias="0.056" />
 
-    <LinearLayout
-        android:id="@+id/card_cost_container"
+    <TextView
+        android:id="@+id/card_detail_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:orientation="horizontal"
+        android:layout_marginHorizontal="40dp"
+        android:maxWidth="350dp"
+        android:textSize="25sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/card_detail_name"
-        app:layout_constraintTop_toBottomOf="@+id/card_cover_container"
-        app:layout_constraintVertical_bias="0.060" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_cost_container"
+        app:layout_constraintVertical_bias="0.056" />
 
     <TextView
         android:id="@+id/card_detail_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
+        android:maxWidth="350dp"
         android:layout_marginTop="15dp"
         android:textSize="15sp"
         android:textStyle="bold|italic"
