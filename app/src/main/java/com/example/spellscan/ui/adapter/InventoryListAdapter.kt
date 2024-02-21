@@ -17,6 +17,7 @@ import com.example.spellscan.R
 import com.example.spellscan.db.entity.CardEntity
 import com.example.spellscan.ui.CardDetailActivity
 import com.example.spellscan.ui.CardDetailActivity.Companion.CARD_ID_INTENT_KEY
+import com.example.spellscan.ui.CardDetailActivity.Companion.HAS_CARD_FACES_INTENT_KEY
 import com.google.android.material.card.MaterialCardView
 
 @SuppressLint("NotifyDataSetChanged")
@@ -66,21 +67,23 @@ class InventoryListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val dataset = liveDataSet.value ?: emptyList()
+        val card = dataset[position]
 
         holder.clickableCard.setOnClickListener {
             val intent = Intent(holder.itemView.context, CardDetailActivity::class.java)
-            intent.putExtra(CARD_ID_INTENT_KEY, dataset[position].id)
+            intent.putExtra(CARD_ID_INTENT_KEY, card.id)
+            intent.putExtra(HAS_CARD_FACES_INTENT_KEY, card.hasCardFaces)
             holder.itemView.context.startActivity(intent)
         }
 
-        holder.cardName.text = dataset[position].name
-        holder.cardLang.text = dataset[position].lang
-        holder.cardSet.text = dataset[position].set
+        holder.cardName.text = card.name
+        holder.cardLang.text = card.lang
+        holder.cardSet.text = card.set
 
         // Apply image here
         val imageLoader = holder.cardImage.context.imageLoader
         val request = ImageRequest.Builder(holder.cardImage.context)
-            .data(dataset[position].imageUrl)
+            .data(card.imageUrl)
             .target(holder.cardImage)
             .build()
         imageLoader.enqueue(request)

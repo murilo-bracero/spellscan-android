@@ -6,7 +6,7 @@ import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.example.spellscan.logger.TAG
-import com.example.spellscan.model.Card
+import com.example.spellscan.model.CardReference
 import com.example.spellscan.service.CardImageAnalyzerService
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
@@ -14,7 +14,7 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
 class CardImageAnalyzer(
     private val cardImageAnalyzerService: CardImageAnalyzerService,
-    private val onCardRecognized: (Card) -> Unit
+    private val onCardRecognized: (CardReference) -> Unit
 ) : ImageAnalysis.Analyzer {
     private var isOnProcessing = false
 

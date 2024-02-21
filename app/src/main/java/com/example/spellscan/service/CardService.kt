@@ -1,7 +1,7 @@
 package com.example.spellscan.service
 
 import com.example.spellscan.config.GrpcConfig
-import com.example.spellscan.model.Card
+import com.example.spellscan.model.CardReference
 import com.spellscan.cardservice.CardRequest
 import com.spellscan.cardservice.CardResponse
 import com.spellscan.cardservice.CardServiceGrpc
@@ -12,7 +12,7 @@ class CardService(
     private var stub: CardServiceGrpc.CardServiceFutureStub
 ) {
 
-    suspend fun find(card: Card): CardResponse {
+    suspend fun find(card: CardReference): CardResponse {
         val request = CardRequest.newBuilder()
             .setName(card.name)
             .setType(card.type)
@@ -24,7 +24,7 @@ class CardService(
         }
     }
 
-    suspend fun findAll(cards: List<Card>): List<CardResponse> {
+    suspend fun findAll(cards: List<CardReference>): List<CardResponse> {
         if (cards.isEmpty()) {
             return emptyList()
         }

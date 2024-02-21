@@ -15,109 +15,177 @@ import coil.request.ImageRequest
 import com.example.spellscan.R
 import com.example.spellscan.converter.languageToResource
 import com.example.spellscan.converter.symbolToDrawable
+import com.example.spellscan.db.entity.CardEntity
+import com.example.spellscan.db.entity.CardFaceEntity
 import com.example.spellscan.ui.viewmodel.CardServiceViewModel
 
-class CardDetailUtils {
+suspend fun loadCard(
+    cardId: String?,
+    cardServiceViewModel: CardServiceViewModel,
+    context: Context,
+    cardCostContainer: ViewGroup,
+    imageView: ImageView,
+    cardNameTextView: TextView,
+    cardTypeTextView: TextView,
+    cardSetTextView: TextView,
+    cardLangTextView: TextView,
+    cardPrintedTextTextView: TextView
+) {
+    if (cardId == null) return
 
-    suspend fun loadCard(
-        cardId: String?,
-        cardServiceViewModel: CardServiceViewModel,
-        context: Context,
-        cardCostContainer: ViewGroup,
-        imageView: ImageView,
-        cardNameTextView: TextView,
-        cardTypeTextView: TextView,
-        cardSetTextView: TextView,
-        cardLangTextView: TextView,
-        cardPrintedTextTextView: TextView
-    ) {
-        if (cardId == null) return
+    val card = cardServiceViewModel.findById(cardId)
 
-        val card = cardServiceViewModel.findById(cardId)
+    renderCardDetails(
+        card,
+        context,
+        imageView,
+        cardCostContainer,
+        cardNameTextView,
+        cardTypeTextView,
+        cardSetTextView,
+        cardLangTextView,
+        cardPrintedTextTextView
+    )
+}
 
-        val imageLoader = imageView.context.imageLoader
-        val request = ImageRequest.Builder(imageView.context)
-            .data(card.artImageUrl)
-            .target(imageView)
-            .build()
-        imageLoader.enqueue(request)
+fun renderFrontFace(
+    card: CardEntity?,
+    context: Context,
+    cardCostContainer: ViewGroup,
+    imageView: ImageView,
+    cardNameTextView: TextView,
+    cardTypeTextView: TextView,
+    cardSetTextView: TextView,
+    cardLangTextView: TextView,
+    cardPrintedTextTextView: TextView
+) {
+    if (card == null || !card.hasCardFaces) return
 
-        loadManaCost(card.cost, context, cardCostContainer)
+    val face = card.cardFaces.first()
 
-        renderPrintedText(card.printedText, context, cardPrintedTextTextView)
+    val imageLoader = imageView.context.imageLoader
+    val request = ImageRequest.Builder(imageView.context)
+        .data(face.artImage)
+        .target(imageView)
+        .build()
+    imageLoader.enqueue(request)
 
-        cardNameTextView.text = card.name
-        cardTypeTextView.text = card.type
-        cardSetTextView.text = card.set
-        cardLangTextView.setText(languageToResource(card.lang))
+    loadManaCost(face.manaCost, context, cardCostContainer)
 
-    }
+    renderPrintedText(face.printedText, context, cardPrintedTextTextView)
 
-    private fun loadManaCost(
-        manaCost: String,
-        context: Context,
-        cardCostContainer: ViewGroup
-    ) {
-        manaCost.split("}")
-            .filter { it.isNotEmpty() }
-            .map { it.removePrefix("{") }
-            .map { renderManaCost(it, context, cardCostContainer) }
-    }
+    cardNameTextView.text = face.name
+    cardTypeTextView.text = face.typeLine
+    cardSetTextView.text = card.set
+    cardLangTextView.setText(languageToResource(card.lang))
+}
 
-    private fun renderManaCost(
-        symbol: String,
-        context: Context,
-        cardCostContainer: ViewGroup
-    ) {
-        val imageView = ImageView(context)
-        val width = context.resources.getDimension(R.dimen.mana_cost_width)
-        imageView.layoutParams = ViewGroup.LayoutParams(width.toInt(), width.toInt())
-        imageView.setImageResource(symbolToDrawable(symbol))
-        cardCostContainer.addView(imageView)
-    }
+fun renderBackFace(
+    face: CardFaceEntity?,
+    context: Context,
+    cardNameTextView: TextView,
+    cardTypeTextView: TextView,
+    cardPrintedTextTextView: TextView
+) {
+    if (face == null) return
 
-    private fun renderPrintedText(
-        printedText: String,
-        context: Context,
-        cardDetailText: TextView
-    ) {
-        val ssb = SpannableStringBuilder(printedText)
+    renderPrintedText(face.printedText, context, cardPrintedTextTextView)
 
-        var modifiablePrintedText = printedText
-        while (modifiablePrintedText.contains('{')) {
-            var start = 0
-            var action = ""
-            var end = 0
-            for (i in modifiablePrintedText.indices) {
-                if (modifiablePrintedText[i] == '{') {
-                    start = i
-                }
+    cardNameTextView.text = face.name
+    cardTypeTextView.text = face.typeLine
+}
 
-                if (start != 0 && modifiablePrintedText[i] != '{' && modifiablePrintedText[i] != '}') {
-                    action += modifiablePrintedText[i].toString()
-                }
+private fun renderCardDetails(
+    card: CardEntity,
+    context: Context,
+    imageView: ImageView,
+    cardCostContainer: ViewGroup,
+    cardNameTextView: TextView,
+    cardTypeTextView: TextView,
+    cardSetTextView: TextView,
+    cardLangTextView: TextView,
+    cardPrintedTextTextView: TextView
+) {
+    val imageLoader = imageView.context.imageLoader
+    val request = ImageRequest.Builder(imageView.context)
+        .data(card.artImageUrl)
+        .target(imageView)
+        .build()
+    imageLoader.enqueue(request)
 
-                if (modifiablePrintedText[i] == '}') {
-                    end = i + 1
-                    break
-                }
+    loadManaCost(card.cost, context, cardCostContainer)
+
+    renderPrintedText(card.printedText, context, cardPrintedTextTextView)
+
+    cardNameTextView.text = card.name
+    cardTypeTextView.text = card.type
+    cardSetTextView.text = card.set
+    cardLangTextView.setText(languageToResource(card.lang))
+}
+
+private fun loadManaCost(
+    manaCost: String,
+    context: Context,
+    cardCostContainer: ViewGroup
+) {
+    manaCost.split("}")
+        .filter { it.isNotEmpty() }
+        .map { it.removePrefix("{") }
+        .map { renderManaCost(it, context, cardCostContainer) }
+}
+
+private fun renderManaCost(
+    symbol: String,
+    context: Context,
+    cardCostContainer: ViewGroup
+) {
+    val imageView = ImageView(context)
+    val width = context.resources.getDimension(R.dimen.mana_cost_width)
+    imageView.layoutParams = ViewGroup.LayoutParams(width.toInt(), width.toInt())
+    imageView.setImageResource(symbolToDrawable(symbol))
+    cardCostContainer.addView(imageView)
+}
+
+private fun renderPrintedText(
+    printedText: String,
+    context: Context,
+    cardDetailText: TextView
+) {
+    val ssb = SpannableStringBuilder(printedText)
+
+    var modifiablePrintedText = printedText
+    while (modifiablePrintedText.contains('{')) {
+        var start = 0
+        var action = ""
+        var end = 0
+        for (i in modifiablePrintedText.indices) {
+            if (modifiablePrintedText[i] == '{') {
+                start = i
             }
-            val cd =
-                ResourcesCompat.getDrawable(
-                    context.resources,
-                    symbolToDrawable(action),
-                    context.theme
-                )!!
-            val width = context.resources.getDimension(R.dimen.text_mana_cost_width)
-            cd.setBounds(0, 0, width.toInt(), width.toInt())
-            modifiablePrintedText = modifiablePrintedText.removeRange(start, end)
-            ssb.setSpan(
-                ImageSpan(cd, ALIGN_BASELINE), start, end,
-                SPAN_INCLUSIVE_INCLUSIVE
-            )
-        }
 
-        cardDetailText.setText(ssb, SPANNABLE)
+            if (start != 0 && modifiablePrintedText[i] != '{' && modifiablePrintedText[i] != '}') {
+                action += modifiablePrintedText[i].toString()
+            }
+
+            if (modifiablePrintedText[i] == '}') {
+                end = i + 1
+                break
+            }
+        }
+        val cd =
+            ResourcesCompat.getDrawable(
+                context.resources,
+                symbolToDrawable(action),
+                context.theme
+            )!!
+        val width = context.resources.getDimension(R.dimen.text_mana_cost_width)
+        cd.setBounds(0, 0, width.toInt(), width.toInt())
+        modifiablePrintedText = modifiablePrintedText.replaceRange(start, end, "|".repeat(action.length + 2))
+        ssb.setSpan(
+            ImageSpan(cd, ALIGN_BASELINE), start, end,
+            SPAN_INCLUSIVE_INCLUSIVE
+        )
     }
 
+    cardDetailText.setText(ssb, SPANNABLE)
 }

@@ -1,13 +1,13 @@
 package com.example.spellscan.service
 
 import android.graphics.Point
-import com.example.spellscan.model.Card
+import com.example.spellscan.model.CardReference
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.Text.TextBlock
 
 class CardImageAnalyzerService {
 
-    fun analyze(visionText: Text, onCardRecognized: (Card) -> Unit) {
+    fun analyze(visionText: Text, onCardRecognized: (CardReference) -> Unit) {
         if (!hasEnoughBlocks(visionText.textBlocks)) {
             return
         }
@@ -25,7 +25,7 @@ class CardImageAnalyzerService {
 
         val cardSet = findCardSet(textBlocks)
 
-        val card = Card(cardName, cardType, cardSet)
+        val card = CardReference(cardName, cardType, cardSet)
 
         onCardRecognized(card)
     }

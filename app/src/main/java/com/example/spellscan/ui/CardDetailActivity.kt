@@ -1,32 +1,16 @@
 package com.example.spellscan.ui
 
 import android.os.Bundle
-import android.text.Spannable.SPAN_INCLUSIVE_INCLUSIVE
-import android.text.SpannableStringBuilder
-import android.text.style.ImageSpan
-import android.text.style.ImageSpan.ALIGN_BASELINE
-import android.view.ViewGroup.LayoutParams
-import android.widget.ImageView
-import android.widget.TextView.BufferType.SPANNABLE
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.lifecycleScope
-import coil.imageLoader
-import coil.request.ImageRequest
-import com.example.spellscan.R
-import com.example.spellscan.converter.languageToResource
-import com.example.spellscan.converter.symbolToDrawable
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.example.spellscan.databinding.ActivityCardDetailBinding
-import com.example.spellscan.ui.viewmodel.CardServiceViewModel
-import com.example.spellscan.util.CardDetailUtils
-import kotlinx.coroutines.launch
+import com.example.spellscan.ui.fragment.DoubleFaceCardDetailFragment
+import com.example.spellscan.ui.fragment.SingleFaceCardDetailFragment
 
 class CardDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCardDetailBinding
-
-    private val cardServiceViewModel: CardServiceViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,20 +18,22 @@ class CardDetailActivity : AppCompatActivity() {
         binding = ActivityCardDetailBinding.inflate(layoutInflater)
 
         val cardId = intent.getStringExtra(CARD_ID_INTENT_KEY)
+        val hasCardFaces = intent.getBooleanExtra(HAS_CARD_FACES_INTENT_KEY, false)
 
-        lifecycleScope.launch {
-            CardDetailUtils().loadCard(
-                cardId,
-                cardServiceViewModel,
-                this@CardDetailActivity,
-                binding.cardCostContainer,
-                binding.cardCover,
-                binding.cardDetailName,
-                binding.cardDetailType,
-                binding.cardDetailSet,
-                binding.cardDetailLang,
-                binding.cardDetailText
-            )
+        if (savedInstanceState == null) {
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+
+                val fragment: Fragment = if (hasCardFaces)
+                    DoubleFaceCardDetailFragment.newInstance(cardId)
+                else
+                    SingleFaceCardDetailFragment.newInstance(cardId)
+
+                replace(
+                    binding.cardDetailFragmentContainer.id,
+                    fragment
+                )
+            }
         }
 
         setContentView(binding.root)
@@ -55,5 +41,6 @@ class CardDetailActivity : AppCompatActivity() {
 
     companion object {
         const val CARD_ID_INTENT_KEY = "card_id"
+        const val HAS_CARD_FACES_INTENT_KEY = "has_card_faces"
     }
 }

@@ -3,7 +3,7 @@ package com.example.spellscan.ui.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.example.spellscan.db.entity.CardEntity
-import com.example.spellscan.model.Card
+import com.example.spellscan.model.CardReference
 import com.example.spellscan.repository.CardCacheRepository
 import com.example.spellscan.service.CardService
 
@@ -13,7 +13,7 @@ class CardServiceViewModel(application: Application) : AndroidViewModel(applicat
     private var cardCacheRepository =
         CardCacheRepository.getInstance(application.applicationContext)
 
-    suspend fun search(card: Card): CardEntity {
+    suspend fun search(card: CardReference): CardEntity {
         val found =
             cardCacheRepository.findByNameAndTypeAndSet(card.name, card.type, card.set)
 
@@ -21,14 +21,16 @@ class CardServiceViewModel(application: Application) : AndroidViewModel(applicat
             return found
         }
 
-        return cardService.find(card).also {
+        return cardService.find(card).let {
             cardCacheRepository.save(it)
-        }.let {
-            CardEntity(it.id, it.name, it.manaCost, it.type, it.set, it.lang, it.imageUrl, it.artImageUrl, it.printedText)
         }
     }
 
     suspend fun findById(id: String): CardEntity {
+        return cardCacheRepository.findById(id)
+    }
+
+    suspend fun findDoubleFacedById(id: String): CardEntity {
         return cardCacheRepository.findById(id)
     }
 

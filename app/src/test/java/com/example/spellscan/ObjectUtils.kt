@@ -1,8 +1,7 @@
 package com.example.spellscan
 
-import com.example.spellscan.model.Card
+import com.example.spellscan.model.CardReference
 import com.spellscan.cardservice.CardResponse
-import java.util.UUID
 
 fun buildCardResponse(
     id: String = "bcd65dec-ec09-4fc2-833a-383c67454c44",
@@ -26,7 +25,7 @@ fun buildCard(
     name: String = "Mestre da Caça de Tovolar",
     type: String = "Criatura - Humano Lobisomem",
     set: String = "MID",
-): Card = Card(
+): CardReference = CardReference(
     name,
     type,
     set

@@ -21,7 +21,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.spellscan.analyzer.CardImageAnalyzer
 import com.example.spellscan.databinding.FragmentCameraBinding
 import com.example.spellscan.logger.TAG
-import com.example.spellscan.model.Card
+import com.example.spellscan.model.CardReference
 import com.example.spellscan.service.CardImageAnalyzerService
 import com.example.spellscan.ui.viewmodel.CardViewModel
 import com.example.spellscan.util.afterMeasured
@@ -92,7 +92,7 @@ class CameraFragment : Fragment() {
         }, ContextCompat.getMainExecutor(requireContext()))
     }
 
-    private fun showCard(card: Card) {
+    private fun showCard(card: CardReference) {
         if(isAdded) {
             cardViewModel.cardLiveData.value = card
         }

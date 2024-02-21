@@ -1,7 +1,7 @@
 package com.example.spellscan.service
 
 import android.graphics.Point
-import com.example.spellscan.model.Card
+import com.example.spellscan.model.CardReference
 import com.google.mlkit.vision.text.Text
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.fail
@@ -59,7 +59,7 @@ class CardImageAnalyzerServiceTest {
         `when`(mockedTextBlock4.text).thenReturn("SOV")
         `when`(mockedTextBlock5.text).thenReturn("5")
 
-        var capturedCard: Card? = null
+        var capturedCard: CardReference? = null
 
         //when
         cardImageAnalyzerService.analyze(mockedText) {
@@ -83,7 +83,7 @@ class CardImageAnalyzerServiceTest {
             )
         )
 
-        val onCardRecognized: (Card) -> Unit = {
+        val onCardRecognized: (CardReference) -> Unit = {
             fail("callback should not be called")
         }
 
@@ -110,7 +110,7 @@ class CardImageAnalyzerServiceTest {
         `when`(mockedTextBlock4.text).thenReturn("8")
         `when`(mockedTextBlock5.text).thenReturn("SET")
 
-        var capturedCard: Card? = null
+        var capturedCard: CardReference? = null
 
         // when
         cardImageAnalyzerService.analyze(mockedText) {
