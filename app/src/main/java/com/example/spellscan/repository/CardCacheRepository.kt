@@ -53,7 +53,8 @@ class CardCacheRepository(context: Context) {
                 cardFaceResponse.cardImage,
                 cardFaceResponse.artImage,
                 cardFaceResponse.colorsList.joinToString(separator = ","),
-                cardFaceResponse.colorIndicatorList.joinToString(separator = ",")
+                cardFaceResponse.colorIndicatorList.joinToString(separator = ","),
+                card.id
             )
         }.map {
             db.cardFaceDao().save(it)
@@ -66,7 +67,7 @@ class CardCacheRepository(context: Context) {
     suspend fun findById(id: String): CardEntity {
         val card = db.cardDao().findById(id)
 
-        if(!card.hasCardFaces) {
+        if (!card.hasCardFaces) {
             return card
         }
 
@@ -81,6 +82,7 @@ class CardCacheRepository(context: Context) {
 
     suspend fun findAll(): List<CardEntity> {
         return db.cardDao().findAll()
+            .map { it.key.cardFaces.addAll(it.value); it.key }
     }
 
     suspend fun findByNameAndTypeAndSet(name: String, type: String, set: String): CardEntity? {

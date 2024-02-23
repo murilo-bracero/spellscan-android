@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
             renderCardAnalysisFragment(savedInstanceState)
         } else {
             permissionsProvider.requestAppPermissions()
+            renderCardAnalysisFragment(savedInstanceState)
         }
 
         binding.bottomNavigationView.setOnItemSelectedListener {

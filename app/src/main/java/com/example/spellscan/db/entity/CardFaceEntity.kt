@@ -15,5 +15,6 @@ data class CardFaceEntity(
     @ColumnInfo(name = "image_url") var cardImage: String,
     @ColumnInfo(name = "art_image_url") var artImage: String,
     var colors: String,
-    @ColumnInfo(name = "color_indicators") var colorIndicators: String
+    @ColumnInfo(name = "color_indicators") var colorIndicators: String,
+    @ColumnInfo(name = "card_id") var cardId: String
 )

@@ -80,10 +80,14 @@ class InventoryListAdapter(
         holder.cardLang.text = card.lang
         holder.cardSet.text = card.set
 
-        // Apply image here
+        val cardImageUrl = if (card.cardFaces.isNotEmpty())
+            card.cardFaces.first().cardImage
+        else
+            card.imageUrl
+
         val imageLoader = holder.cardImage.context.imageLoader
         val request = ImageRequest.Builder(holder.cardImage.context)
-            .data(card.imageUrl)
+            .data(cardImageUrl)
             .target(holder.cardImage)
             .build()
         imageLoader.enqueue(request)

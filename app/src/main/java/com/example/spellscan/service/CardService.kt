@@ -7,10 +7,14 @@ import com.spellscan.cardservice.CardResponse
 import com.spellscan.cardservice.CardServiceGrpc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.SECONDS
 
 class CardService(
     private var stub: CardServiceGrpc.CardServiceFutureStub
 ) {
+
+    private val deadlineDuration = 2L
 
     suspend fun find(card: CardReference): CardResponse {
         val request = CardRequest.newBuilder()
@@ -20,7 +24,9 @@ class CardService(
             .build()
 
         return withContext(Dispatchers.IO) {
-            stub.find(request).get()
+            stub.withDeadlineAfter(deadlineDuration, SECONDS)
+                .find(request)
+                .get()
         }
     }
 

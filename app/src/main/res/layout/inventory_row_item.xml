@@ -17,7 +17,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -53,7 +53,7 @@
                     android:layout_margin="3dp"
                     android:maxWidth="200dp"
                     android:maxLines="1"
-                    android:text="pt_br"
+                    android:text="pt"
                     android:textSize="15sp"
                     android:textStyle="italic" />
             </LinearLayout>

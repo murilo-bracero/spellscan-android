@@ -1,6 +1,7 @@
 package com.example.spellscan.ui.fragment.component
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,8 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.spellscan.databinding.FragmentCardThumbnailBinding
+import com.example.spellscan.logger.TAG
 import com.example.spellscan.ui.viewmodel.CardServiceViewModel
 import com.example.spellscan.ui.viewmodel.CardViewModel
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
 class CardThumbnailFragment : Fragment() {
@@ -40,7 +44,17 @@ class CardThumbnailFragment : Fragment() {
     private fun addCard() {
         val card = cardViewModel.cardLiveData.value!!
 
-        lifecycleScope.launch {
+        val handler = CoroutineExceptionHandler { _, throwable ->
+            Log.e(TAG, throwable.toString())
+
+            Snackbar.make(
+                binding.cardThumbnailRoot,
+                "Could not find card due to a network error. Check your internet connection and try again.",
+                Snackbar.LENGTH_LONG
+            ).show()
+        }
+
+        lifecycleScope.launch(handler) {
             cardServiceViewModel.search(card)
         }
     }
