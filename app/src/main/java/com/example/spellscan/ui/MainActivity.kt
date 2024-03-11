@@ -2,6 +2,7 @@ package com.example.spellscan.ui
 
 import android.content.Context
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
@@ -9,16 +10,20 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import com.example.spellscan.BuildConfig
 import com.example.spellscan.R
 import com.example.spellscan.databinding.ActivityMainBinding
+import com.example.spellscan.provider.AuthorizationProvider
 import com.example.spellscan.provider.PermissionsProvider
 import com.example.spellscan.ui.fragment.CardAnalysisFragment
 import com.example.spellscan.ui.fragment.CardInventoryFragment
+import net.openid.appauth.AuthorizationServiceConfiguration
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var permissionsProvider: PermissionsProvider
+    private lateinit var authorizationProvider: AuthorizationProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         permissionsProvider = PermissionsProvider(this)
+        authorizationProvider = AuthorizationProvider(this)
 
         if (permissionsProvider.allPermissionsGranted()) {
             renderCardAnalysisFragment(savedInstanceState)
@@ -33,6 +39,8 @@ class MainActivity : AppCompatActivity() {
             permissionsProvider.requestAppPermissions()
             renderCardAnalysisFragment(savedInstanceState)
         }
+
+        authorizationProvider.authorize()
 
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
@@ -49,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     return@setOnItemSelectedListener true
                 }
+
                 else -> false
             }
         }

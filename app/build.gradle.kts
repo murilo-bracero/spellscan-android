@@ -19,6 +19,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders["appAuthRedirectScheme"] = "com.example.spellscan"
     }
 
     buildTypes {
@@ -30,12 +32,16 @@ android {
             )
 
             buildConfigField("String", "BACKEND_HOST", "\"backend.spellscan.com\"")
-            buildConfigField("int", "BACKEND_PORT", "8080")
+            buildConfigField("int", "BACKEND_PORT", "9000")
+            buildConfigField("String", "OIDC_HOST", "\"idp.spellscan.com\"")
+            buildConfigField("int", "OIDC_PORT", "8080")
         }
 
         debug {
             buildConfigField("String", "BACKEND_HOST", "\"10.0.2.2\"")
             buildConfigField("int", "BACKEND_PORT", "9000")
+            buildConfigField("String", "OIDC_HOST", "\"10.0.2.2\"")
+            buildConfigField("int", "OIDC_PORT", "8080")
         }
     }
     compileOptions {
@@ -68,6 +74,7 @@ val grpc_kotlin_stub_version = "1.4.1"
 val coroutines_version = "1.7.3"
 val coil_version = "2.5.0"
 val room_version = "2.6.1"
+val appauth_version = "0.11.1"
 
 dependencies {
 
@@ -109,6 +116,9 @@ dependencies {
     implementation("androidx.room:room-runtime:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
+
+    // auth
+    implementation("net.openid:appauth:$appauth_version")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-inline:5.2.0")
