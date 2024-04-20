@@ -43,5 +43,4 @@ class CardService(
             return CardService(stub)
         }
     }
-
 }
