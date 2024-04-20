@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="mana_cost_width">25sp</dimen>
+    <dimen name="title">25sp</dimen>
     <dimen name="text_mana_cost_width">15sp</dimen>
 </resources>

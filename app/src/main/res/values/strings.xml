@@ -19,4 +19,9 @@
     <string name="pt">Portuguese</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="scan_and_inventory_in_one_place">Scan and Inventory in one place</string>
+    <string name="create_your_account_or_sign_in_to_use_the_inventory_feature">Create your account or sign in to use the inventory feature</string>
+    <string name="sign_in">Sign In</string>
+    <string name="or_create_your_account_now"><u>Log in if you already have an account</u></string>
+    <string name="logout">Logout</string>
 </resources>

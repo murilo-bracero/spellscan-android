@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.spellscan"
+    namespace = "com.example.spellscanapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.spellscan"
+        applicationId = "com.example.spellscanapp"
         minSdk = 29
         targetSdk = 34
         versionCode = 1
@@ -20,7 +20,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders["appAuthRedirectScheme"] = "com.example.spellscan"
+        manifestPlaceholders["appAuthRedirectScheme"] = "com.example.spellscanapp"
     }
 
     buildTypes {
@@ -34,14 +34,12 @@ android {
             buildConfigField("String", "BACKEND_HOST", "\"backend.spellscan.com\"")
             buildConfigField("int", "BACKEND_PORT", "9000")
             buildConfigField("String", "OIDC_HOST", "\"idp.spellscan.com\"")
-            buildConfigField("int", "OIDC_PORT", "8080")
         }
 
         debug {
             buildConfigField("String", "BACKEND_HOST", "\"10.0.2.2\"")
             buildConfigField("int", "BACKEND_PORT", "9000")
-            buildConfigField("String", "OIDC_HOST", "\"10.0.2.2\"")
-            buildConfigField("int", "OIDC_PORT", "8080")
+            buildConfigField("String", "OIDC_HOST", "\"idp.dev.spellscan.com.br\"")
         }
     }
     compileOptions {
