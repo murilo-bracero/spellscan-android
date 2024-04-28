@@ -32,13 +32,11 @@ android {
             )
 
             buildConfigField("String", "BACKEND_HOST", "\"backend.spellscan.com\"")
-            buildConfigField("int", "BACKEND_PORT", "9000")
             buildConfigField("String", "OIDC_HOST", "\"idp.spellscan.com\"")
         }
 
         debug {
-            buildConfigField("String", "BACKEND_HOST", "\"10.0.2.2\"")
-            buildConfigField("int", "BACKEND_PORT", "9000")
+            buildConfigField("String", "BACKEND_HOST", "\"backend.dev.spellscan.com.br\"")
             buildConfigField("String", "OIDC_HOST", "\"idp.dev.spellscan.com.br\"")
         }
     }

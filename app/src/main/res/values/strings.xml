@@ -24,4 +24,5 @@
     <string name="sign_in">Sign In</string>
     <string name="or_create_your_account_now"><u>Log in if you already have an account</u></string>
     <string name="logout">Logout</string>
+    <string name="inventory_placeholder">MyCollection</string>
 </resources>

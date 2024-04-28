@@ -16,7 +16,7 @@ import com.example.spellscanapp.provider.PermissionsProvider
 import com.example.spellscanapp.repository.AuthStateRepository
 import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.ui.fragment.CardAnalysisFragment
-import com.example.spellscanapp.ui.fragment.CardInventoryFragment
+import com.example.spellscanapp.ui.fragment.InventoryListFragment
 import com.example.spellscanapp.ui.fragment.SignInFragment
 
 class MainActivity : AppCompatActivity() {
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.check_list_item -> {
                     if (binding.bottomNavigationView.selectedItemId != R.id.check_list_item && authService.isAuthorized(this)) {
-                        renderCardCheckListFragment(savedInstanceState)
+                        renderInventoryListFragment(savedInstanceState)
                     }
 
                     if (!authService.isAuthorized(this)) {
@@ -71,8 +71,8 @@ class MainActivity : AppCompatActivity() {
         renderFragment<CardAnalysisFragment>(R.id.screen_fragment_container_view, savedInstanceState)
     }
 
-    private fun renderCardCheckListFragment(savedInstanceState: Bundle?) {
-        renderFragment<CardInventoryFragment>(R.id.screen_fragment_container_view, savedInstanceState)
+    private fun renderInventoryListFragment(savedInstanceState: Bundle?) {
+        renderFragment<InventoryListFragment>(R.id.screen_fragment_container_view, savedInstanceState)
     }
 
     private fun renderSignInFragment(savedInstanceState: Bundle?) {

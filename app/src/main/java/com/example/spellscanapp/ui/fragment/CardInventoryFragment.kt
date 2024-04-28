@@ -15,7 +15,7 @@ import com.example.spellscanapp.db.entity.CardEntity
 import com.example.spellscanapp.repository.AuthStateRepository
 import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.service.CardService
-import com.example.spellscanapp.ui.adapter.InventoryListAdapter
+import com.example.spellscanapp.ui.adapter.CardListAdapter
 import com.example.spellscanapp.ui.fragment.component.SwipableListFragment
 import com.example.spellscanapp.ui.viewmodel.CardInventoryViewModel
 import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
@@ -51,7 +51,7 @@ class CardInventoryFragment : Fragment() {
 
             cardInventoryViewModel.setCardDataset(dataset)
 
-            val adapter = InventoryListAdapter(cardInventoryViewModel.cardDataset, viewLifecycleOwner)
+            val adapter = CardListAdapter(cardInventoryViewModel.cardDataset, viewLifecycleOwner)
 
             if (savedInstanceState == null) {
                 childFragmentManager.beginTransaction()
