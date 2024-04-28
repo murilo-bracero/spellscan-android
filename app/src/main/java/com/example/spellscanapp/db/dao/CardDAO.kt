@@ -14,7 +14,7 @@ interface CardDAO {
     suspend fun save(card: CardEntity)
 
     @Query("SELECT * FROM cards WHERE id = :id LIMIT 1")
-    suspend fun findById(id: String): CardEntity
+    suspend fun findById(id: String): CardEntity?
 
     @Query("SELECT * FROM cards " +
             "LEFT JOIN card_faces ON cards.id = card_faces.card_id")

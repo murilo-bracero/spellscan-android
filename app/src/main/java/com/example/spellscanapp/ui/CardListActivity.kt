@@ -22,7 +22,7 @@ class CardListActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                replace<CardInventoryFragment>(binding.cardInventoryFragmentContainerView.id)
+                replace(binding.cardInventoryFragmentContainerView.id, CardInventoryFragment.newInstance(inventoryId))
             }
         }
 

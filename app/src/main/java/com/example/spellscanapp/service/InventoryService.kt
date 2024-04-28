@@ -3,6 +3,7 @@ package com.example.spellscanapp.service
 import com.example.spellscanapp.config.GrpcConfig
 import com.spellscan.inventoryservice.Empty
 import com.spellscan.inventoryservice.FindInventoriesByOwnerIdResponse
+import com.spellscan.inventoryservice.FindInventoryByIdRequest
 import com.spellscan.inventoryservice.InventoryResponse
 import com.spellscan.inventoryservice.InventoryServiceGrpc.InventoryServiceBlockingStub
 import io.grpc.ClientInterceptor
@@ -27,6 +28,12 @@ class InventoryService(
         withContext(Dispatchers.IO) {
             stub.withInterceptors(metadataInterceptor(accessToken))
                 .findInventoriesByOwnerId(Empty.newBuilder().build())
+        }
+
+    suspend fun findInventoryById(accessToken: String, id: String): InventoryResponse =
+        withContext(Dispatchers.IO) {
+            stub.withInterceptors(metadataInterceptor(accessToken))
+                .findInventoryById(FindInventoryByIdRequest.newBuilder().setId(id).build())
         }
 
     companion object {

@@ -21,15 +21,8 @@ import com.google.android.material.card.MaterialCardView
 
 @SuppressLint("NotifyDataSetChanged")
 class CardListAdapter(
-    private val liveDataSet: LiveData<List<CardEntity>>,
-    lifecycleOwner: LifecycleOwner
+    private val dataset: List<CardEntity>
 ) : RecyclerView.Adapter<CardListAdapter.ViewHolder>() {
-
-    init {
-        liveDataSet.observe(lifecycleOwner) {
-            notifyDataSetChanged()
-        }
-    }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val clickableCard: MaterialCardView
@@ -62,10 +55,9 @@ class CardListAdapter(
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int = liveDataSet.value?.size ?: 0
+    override fun getItemCount(): Int = dataset.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val dataset = liveDataSet.value ?: emptyList()
         val card = dataset[position]
 
         holder.clickableCard.setOnClickListener {

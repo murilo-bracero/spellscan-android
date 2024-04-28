@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.spellscanapp.db.entity.CardEntity
 
+@Deprecated("Use InventoryViewModel and/or CardServiceViewModel instead")
 class CardInventoryViewModel: ViewModel() {
 
     private val _cardDataset: MutableLiveData<List<CardEntity>> by lazy {

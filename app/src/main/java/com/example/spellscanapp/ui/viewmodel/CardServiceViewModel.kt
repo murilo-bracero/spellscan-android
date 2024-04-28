@@ -13,7 +13,6 @@ class CardServiceViewModel(application: Application) : AndroidViewModel(applicat
     private var cardService: CardService = CardService.newInstance()
     private var cardCacheRepository =
         CardCacheRepository.getInstance(application.applicationContext)
-    private var authStateRepository = AuthStateRepository()
 
     suspend fun search(card: CardReference): CardEntity {
         val found =
@@ -28,12 +27,13 @@ class CardServiceViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    suspend fun findById(id: String): CardEntity {
+    suspend fun findById(id: String): CardEntity? {
         return cardCacheRepository.findById(id)
     }
 
+    @Deprecated("Use findById instead", ReplaceWith("findById(id: String)"))
     suspend fun findDoubleFacedById(id: String): CardEntity {
-        return cardCacheRepository.findById(id)
+        return cardCacheRepository.findById(id)!!
     }
 
     suspend fun findAll(): List<CardEntity> {

@@ -39,7 +39,7 @@ class InventoryViewModel(private val application: Application) : AndroidViewMode
         val authState = authStateRepository.find(application.baseContext)
 
         authState.performActionWithFreshTokens(authorizationService) { accessToken, _, ex ->
-            if(ex != null || accessToken.isNullOrBlank()) {
+            if (ex != null || accessToken.isNullOrBlank()) {
                 Log.e(TAG, "Failed to get fresh tokens on load inventories", ex)
                 val intent = Intent(application.baseContext, LoginAdapterActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -53,6 +53,20 @@ class InventoryViewModel(private val application: Application) : AndroidViewMode
                 _inventoryDataset.value = inventories.inventoriesList
             }
         }
+    }
+
+    suspend fun findInventoryById(id: String): InventoryResponse? {
+        val authState = authStateRepository.find(application.baseContext)
+
+        if (!authState.isAuthorized || authState.needsTokenRefresh) {
+            Log.w(TAG, "Failed to get fresh tokens on load inventories")
+            val intent = Intent(application.baseContext, LoginAdapterActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            application.baseContext.startActivity(intent)
+        }
+
+
+        return inventoryService.findInventoryById(authState.accessToken!!, id)
     }
 
     companion object {
