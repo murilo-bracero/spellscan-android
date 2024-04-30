@@ -17,6 +17,7 @@ class LoginAdapterActivity: AppCompatActivity() {
 
         val authorizationIntent = authorizationProvider.createAuthorizationIntent()
         authorizationProvider.createAuthorizationResultLauncher({
+            Toast.makeText(this, "Login succeeded", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }, {

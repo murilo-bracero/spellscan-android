@@ -31,15 +31,6 @@ class CardServiceViewModel(application: Application) : AndroidViewModel(applicat
         return cardCacheRepository.findById(id)
     }
 
-    @Deprecated("Use findById instead", ReplaceWith("findById(id: String)"))
-    suspend fun findDoubleFacedById(id: String): CardEntity {
-        return cardCacheRepository.findById(id)!!
-    }
-
-    suspend fun findAll(): List<CardEntity> {
-        return cardCacheRepository.findAll()
-    }
-
     suspend fun delete(card: CardEntity) {
         cardCacheRepository.delete(card)
     }

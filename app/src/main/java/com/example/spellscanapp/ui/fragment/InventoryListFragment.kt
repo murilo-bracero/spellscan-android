@@ -12,16 +12,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.FragmentInventoryListBinding
+import com.example.spellscanapp.repository.AuthStateRepository
+import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.ui.LoginAdapterActivity
 import com.example.spellscanapp.ui.adapter.InventoryListAdapter
 import com.example.spellscanapp.ui.viewmodel.InventoryViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import net.openid.appauth.AuthorizationException
 
 class InventoryListFragment : Fragment() {
 
     private val inventoryViewModel: InventoryViewModel by activityViewModels()
+
+    private val authService = AuthService(AuthStateRepository())
 
     private lateinit var binding: FragmentInventoryListBinding
 
@@ -42,9 +47,14 @@ class InventoryListFragment : Fragment() {
         binding.inventoryGridView.adapter = InventoryListAdapter(inventoryViewModel.inventoryDataset, viewLifecycleOwner)
 
         lifecycleScope.launch(coroutineExceptionHandler) {
-            launch {
-                inventoryViewModel.loadInventories()
-            }
+            authService.applyAccessToken(requireContext(), {
+                launch {
+                    inventoryViewModel.loadInventories(it)
+                }
+            }, {
+                val intent = Intent(requireContext(), LoginAdapterActivity::class.java)
+                startActivity(intent)
+            })
         }
 
         return binding.root

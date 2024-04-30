@@ -31,3 +31,7 @@ class AuthStateRepository {
         private const val AUTH_STATE = "auth_state"
     }
 }
+
+fun AuthState.isValid(): Boolean {
+    return this.isAuthorized && this.accessToken != null && this.needsTokenRefresh
+}

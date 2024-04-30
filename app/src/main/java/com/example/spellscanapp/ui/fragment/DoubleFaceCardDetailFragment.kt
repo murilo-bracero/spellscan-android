@@ -49,7 +49,7 @@ class DoubleFaceCardDetailFragment : Fragment() {
     private suspend fun renderDoubleFacedCard(cardId: String?) {
         if (cardId == null) return
 
-        val card = cardServiceViewModel.findDoubleFacedById(cardId)
+        val card = cardServiceViewModel.findById(cardId) ?: return
 
         val back = card.cardFaces.last()
 

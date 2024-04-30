@@ -1,5 +1,6 @@
 package com.example.spellscanapp.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,10 +17,12 @@ import com.example.spellscanapp.db.entity.CardEntity
 import com.example.spellscanapp.repository.AuthStateRepository
 import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.service.CardService
+import com.example.spellscanapp.ui.LoginAdapterActivity
 import com.example.spellscanapp.ui.adapter.CardListAdapter
 import com.example.spellscanapp.ui.fragment.component.SwipableListFragment
 import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
 import com.example.spellscanapp.ui.viewmodel.InventoryViewModel
+import com.spellscan.inventoryservice.InventoryResponse
 import kotlinx.coroutines.launch
 
 class CardInventoryFragment : Fragment() {
@@ -58,40 +61,50 @@ class CardInventoryFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-
-            if(inventoryId == null) {
+            if (inventoryId == null) {
                 Log.d("CardInventoryFragment", "inventoryId is null")
                 return@launch
             }
 
-            val inventory = inventoryViewModel.findInventoryById(inventoryId!!)
+            authService.applyAccessToken(requireContext(), {
+                launch {
+                    val inventory = inventoryViewModel.findInventoryById(it, inventoryId!!)
 
-            if(inventory == null) {
-                Log.d("CardInventoryFragment", "inventory is null: inventoryId=$inventoryId")
-                return@launch
-            }
-
-            val dataset = inventory.cardIdsList
-                .map { cardServiceViewModel.findById(it)!! }
-
-            val adapter = CardListAdapter(dataset)
-
-            if (savedInstanceState == null) {
-                childFragmentManager.beginTransaction()
-                    .replace(R.id.local_list_fragment_container, SwipableListFragment(adapter, {
-                        lifecycleScope.launch {
-                            deleteCard(dataset[it])
-                        }
-                    }, {
-                        lifecycleScope.launch {
-                            deleteCard(dataset[it])
-                        }
-                    }))
-                    .commit()
-            }
+                    if(savedInstanceState == null) {
+                        renderInventory(inventory)
+                    }
+                }
+            }, {
+                val intent = Intent(requireContext(), LoginAdapterActivity::class.java)
+                startActivity(intent)
+            })
         }
 
         return binding.root
+    }
+
+    private suspend fun renderInventory(inventory: InventoryResponse?) {
+        if (inventory == null) {
+            Log.d("CardInventoryFragment", "inventory is null: inventoryId=$inventoryId")
+            return
+        }
+
+        val dataset = inventory.cardIdsList
+            .map { cardServiceViewModel.findById(it)!! }
+
+        val adapter = CardListAdapter(dataset)
+
+        childFragmentManager.beginTransaction()
+            .replace(R.id.local_list_fragment_container, SwipableListFragment(adapter, {
+                lifecycleScope.launch {
+                    deleteCard(dataset[it])
+                }
+            }, {
+                lifecycleScope.launch {
+                    deleteCard(dataset[it])
+                }
+            }))
+            .commit()
     }
 
     private suspend fun deleteCard(cardEntity: CardEntity) {
