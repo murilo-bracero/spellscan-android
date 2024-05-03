@@ -33,5 +33,5 @@ class AuthStateRepository {
 }
 
 fun AuthState.isValid(): Boolean {
-    return this.isAuthorized && this.accessToken != null && this.needsTokenRefresh
+    return this.isAuthorized && this.accessToken != null && !this.needsTokenRefresh
 }

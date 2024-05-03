@@ -5,13 +5,23 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import android.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.iterator
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.FragmentInventoryListBinding
+import com.example.spellscanapp.exception.ExpiredTokenException
+import com.example.spellscanapp.model.dto.FilterDirection
+import com.example.spellscanapp.model.dto.InventoryListFilter
 import com.example.spellscanapp.repository.AuthStateRepository
 import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.ui.LoginAdapterActivity
@@ -28,12 +38,19 @@ class InventoryListFragment : Fragment() {
 
     private val authService = AuthService(AuthStateRepository())
 
+    private val inventoryListFilter: InventoryListFilter = InventoryListFilter()
+
     private lateinit var binding: FragmentInventoryListBinding
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
-        Log.i("porra", "cacete vagina idosa: $exception")
-        val intent = Intent(requireContext(), LoginAdapterActivity::class.java)
-        startActivity(intent)
+        if(exception is ExpiredTokenException) {
+            Log.d(TAG, "Handling ExpiredTokenException")
+            val intent = Intent(requireContext(), LoginAdapterActivity::class.java)
+            return@CoroutineExceptionHandler startActivity(intent)
+        }
+
+        Log.d(TAG, "Handling Unchecked Exception", exception)
+        Toast.makeText(requireContext(), "Something went wrong", Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateView(
@@ -43,20 +60,25 @@ class InventoryListFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentInventoryListBinding.inflate(inflater, container, false)
 
-        binding.inventoryGridView.layoutManager = GridLayoutManager(context, 3)
+        binding.inventoryGridView.layoutManager = GridLayoutManager(context, 2)
         binding.inventoryGridView.adapter = InventoryListAdapter(inventoryViewModel.inventoryDataset, viewLifecycleOwner)
 
         lifecycleScope.launch(coroutineExceptionHandler) {
-            authService.applyAccessToken(requireContext(), {
+            authService.applyAccessToken(requireContext()) {
                 launch {
                     inventoryViewModel.loadInventories(it)
                 }
-            }, {
-                val intent = Intent(requireContext(), LoginAdapterActivity::class.java)
-                startActivity(intent)
-            })
+            }
+        }
+
+        inventoryListFilter.nameDirection.observe(viewLifecycleOwner) {
+            inventoryViewModel.sortByName(it)
         }
 
         return binding.root
+    }
+
+    companion object {
+        const val TAG = "InventoryListFragment"
     }
 }

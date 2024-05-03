@@ -71,6 +71,7 @@ val coroutines_version = "1.7.3"
 val coil_version = "2.5.0"
 val room_version = "2.6.1"
 val appauth_version = "0.11.1"
+val retrofit_version = "2.11.0"
 
 dependencies {
 
@@ -94,6 +95,10 @@ dependencies {
     // grpc
     implementation("io.grpc:grpc-protobuf-lite:${grpc_version}")
     implementation("io.grpc:grpc-stub:${grpc_version}")
+
+    //rest
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofit_version")
 
     implementation("io.grpc:grpc-cronet:${grpc_version}")
     implementation("io.grpc:grpc-okhttp:${grpc_version}")

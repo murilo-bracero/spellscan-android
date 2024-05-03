@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -14,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.FragmentCardInventoryBinding
 import com.example.spellscanapp.db.entity.CardEntity
+import com.example.spellscanapp.exception.ExpiredTokenException
 import com.example.spellscanapp.repository.AuthStateRepository
 import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.service.CardService
@@ -23,6 +25,7 @@ import com.example.spellscanapp.ui.fragment.component.SwipableListFragment
 import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
 import com.example.spellscanapp.ui.viewmodel.InventoryViewModel
 import com.spellscan.inventoryservice.InventoryResponse
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
 class CardInventoryFragment : Fragment() {
@@ -39,6 +42,17 @@ class CardInventoryFragment : Fragment() {
     private lateinit var binding: FragmentCardInventoryBinding
 
     private var inventoryId: String? = null
+
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
+        if(exception is ExpiredTokenException) {
+            Log.d(InventoryListFragment.TAG, "Handling ExpiredTokenException")
+            val intent = Intent(requireContext(), LoginAdapterActivity::class.java)
+            return@CoroutineExceptionHandler startActivity(intent)
+        }
+
+        Log.d(InventoryListFragment.TAG, "Handling Unchecked Exception", exception)
+        Toast.makeText(requireContext(), "Something went wrong", Toast.LENGTH_SHORT).show()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,24 +74,21 @@ class CardInventoryFragment : Fragment() {
             showPopup(it)
         }
 
-        lifecycleScope.launch {
+        lifecycleScope.launch(coroutineExceptionHandler) {
             if (inventoryId == null) {
                 Log.d("CardInventoryFragment", "inventoryId is null")
                 return@launch
             }
 
-            authService.applyAccessToken(requireContext(), {
+            authService.applyAccessToken(requireContext()) {
                 launch {
                     val inventory = inventoryViewModel.findInventoryById(it, inventoryId!!)
 
-                    if(savedInstanceState == null) {
+                    if (savedInstanceState == null) {
                         renderInventory(inventory)
                     }
                 }
-            }, {
-                val intent = Intent(requireContext(), LoginAdapterActivity::class.java)
-                startActivity(intent)
-            })
+            }
         }
 
         return binding.root

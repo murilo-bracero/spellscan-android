@@ -33,11 +33,13 @@ class InventoryListAdapter(
         val clickableCard: MaterialCardView
 
         val inventoryName: TextView
+        val totalCards: TextView
 
         init {
             clickableCard = view.findViewById(R.id.inventory_clickable_card)
 
             inventoryName = view.findViewById(R.id.inventory_name)
+            totalCards = view.findViewById(R.id.total_cards_text)
         }
     }
 
@@ -61,6 +63,8 @@ class InventoryListAdapter(
         }
 
         holder.inventoryName.text = inventory.name
+        holder.totalCards.text = holder.totalCards.text.toString()
+            .replace("{totalCards}", inventory.cardIdsCount.toString())
     }
 
     companion object {
