@@ -1,90 +1,65 @@
 package com.example.spellscanapp.model
 
-import com.example.spellscanapp.db.entity.CardEntity
-import com.example.spellscanapp.db.entity.CardFaceEntity
+import com.spellscan.cardservice.CardFaceResponse
+import com.spellscan.cardservice.CardResponse
 
 class Card(
-    private val id: String,
-    private val manaCost: String,
-    private val lang: String,
-    private val imageUrl: String,
-    private val artImageUrl: String,
-    private val releasedAt: String,
-    private val printedText: String,
-    private val cardFaces: List<CardFace> = listOf(),
-    private val colors: List<String> = listOf(),
-    private val colorIdentity: List<String> = listOf(),
-    private val keywords: List<String> = listOf(),
+    val id: String,
+    val manaCost: String,
+    val lang: String,
+    val imageUrl: String,
+    val artImageUrl: String,
+    val releasedAt: String,
+    val printedText: String,
+    val cardFaces: List<CardFace> = listOf(),
+    val colors: List<String> = listOf(),
+    val colorIdentity: List<String> = listOf(),
     name: String,
     type: String,
     set: String
 ) : CardBase(name, type, set)
 
 data class CardFace(
-    private val name: String,
-    private val manaCost: String,
-    private val typeLine: String,
-    private val printedText: String,
-    private val flavorText: String,
-    private val cardImage: String,
-    private val artImage: String,
-    private val colors: List<String> = listOf(),
-    private val colorIndicator: List<String> = listOf()
+    val name: String,
+    val manaCost: String,
+    val typeLine: String,
+    val printedText: String,
+    val flavorText: String,
+    val cardImage: String,
+    val artImage: String,
+    val colors: List<String> = listOf(),
+    val colorIndicator: List<String> = listOf()
 )
 
-fun buildCard(entity: CardEntity): Card {
-    return Card(
-        entity.id,
-        entity.cost,
-        entity.lang,
-        entity.imageUrl,
-        entity.artImageUrl,
-        entity.releasedAt,
-        entity.printedText,
-        listOf(),
-        parseStringArray(entity.colors),
-        parseStringArray(entity.colorIdentity),
-        parseStringArray(entity.keywords),
-        entity.name,
-        entity.type,
-        entity.set
+fun buildCard(response: CardResponse): Card =
+    Card(
+        response.id,
+        response.manaCost,
+        response.lang,
+        response.imageUrl,
+        response.artImageUrl,
+        response.releasedAt,
+        response.printedText,
+        buildCardFaces(response.cardFacesList),
+        response.colorsList,
+        response.colorIdentityList,
+        response.name,
+        response.type,
+        response.set
     )
-}
 
-fun buildCard(cardEntity: CardEntity, cardFaces: List<CardFaceEntity>): Card {
-    return Card(
-        cardEntity.id,
-        cardEntity.cost,
-        cardEntity.lang,
-        cardEntity.imageUrl,
-        cardEntity.artImageUrl,
-        cardEntity.releasedAt,
-        cardEntity.printedText,
-        buildCardFaces(cardFaces).toList(),
-        parseStringArray(cardEntity.colors),
-        parseStringArray(cardEntity.colorIdentity),
-        parseStringArray(cardEntity.keywords),
-        cardEntity.name,
-        cardEntity.type,
-        cardEntity.set
-    )
-}
-
-fun buildCardFaces(entity: List<CardFaceEntity>): List<CardFace> =
+fun buildCardFaces(entity: List<CardFaceResponse>): List<CardFace> =
     entity.map { buildCardFace(it) }
 
-fun buildCardFace(entity: CardFaceEntity): CardFace =
+fun buildCardFace(response: CardFaceResponse): CardFace =
     CardFace(
-        entity.name,
-        entity.manaCost,
-        entity.typeLine,
-        entity.printedText,
-        entity.flavorText,
-        entity.cardImage,
-        entity.artImage,
-        parseStringArray(entity.colors),
-        parseStringArray(entity.colorIndicators)
+        response.name,
+        response.manaCost,
+        response.typeLine,
+        response.printedText,
+        response.flavorText,
+        response.cardImage,
+        response.artImage,
+        response.colorsList,
+        response.colorIndicatorList
     )
-
-private fun parseStringArray(raw: String?): List<String> =
-    raw?.split(",") ?: listOf()

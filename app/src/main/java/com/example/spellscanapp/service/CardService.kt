@@ -5,6 +5,7 @@ import com.example.spellscanapp.model.CardReference
 import com.spellscan.cardservice.CardRequest
 import com.spellscan.cardservice.CardResponse
 import com.spellscan.cardservice.CardServiceGrpc
+import com.spellscan.cardservice.FindByIdRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit.SECONDS
@@ -14,13 +15,6 @@ class CardService(
 ) {
 
     private val deadlineDuration = 2L
-
-//    private val metadataInterceptor: (String) -> ClientInterceptor = { accessToken ->
-//        MetadataUtils.newAttachHeadersInterceptor(Metadata().also {
-//            val key = Metadata.Key.of("Authorization", Metadata.ASCII_STRING_MARSHALLER)
-//            it.put(key, "Bearer $accessToken")
-//        })
-//    }
 
     suspend fun find(card: CardReference): CardResponse {
         val request = CardRequest.newBuilder()
@@ -32,6 +26,18 @@ class CardService(
         return withContext(Dispatchers.IO) {
             stub.withDeadlineAfter(deadlineDuration, SECONDS)
                 .find(request)
+                .get()
+        }
+    }
+
+    suspend fun findById(id: String): CardResponse {
+        val request = FindByIdRequest.newBuilder()
+            .setId(id)
+            .build()
+
+        return withContext(Dispatchers.IO) {
+            stub.withDeadlineAfter(deadlineDuration, SECONDS)
+                .findById(request)
                 .get()
         }
     }
