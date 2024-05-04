@@ -8,7 +8,7 @@ package cardservice;
 
 service CardService {
   rpc find(CardRequest) returns (CardResponse);
-
+  rpc findById(FindByIdRequest) returns (CardResponse);
   rpc findAll(stream CardRequest) returns (stream CardResponse);
 }
 
@@ -16,6 +16,10 @@ message CardRequest {
   string name = 1;
   string type = 2;
   string set = 3;
+}
+
+message FindByIdRequest {
+  string id = 1;
 }
 
 message CardResponse {
@@ -32,7 +36,6 @@ message CardResponse {
   repeated CardFaceResponse cardFaces = 12;
   repeated string colors = 13;
   repeated string colorIdentity = 14;
-  repeated string keywords = 15;
 }
 
 message CardFaceResponse {

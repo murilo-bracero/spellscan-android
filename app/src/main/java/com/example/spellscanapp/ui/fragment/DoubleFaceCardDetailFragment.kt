@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.example.spellscanapp.databinding.FragmentDoubleFaceCardDetailBinding
-import com.example.spellscanapp.db.entity.CardFaceEntity
+import com.example.spellscanapp.model.CardFace
 import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
 import com.example.spellscanapp.util.renderBackFace
 import com.example.spellscanapp.util.renderFrontFace
@@ -80,7 +80,7 @@ class DoubleFaceCardDetailFragment : Fragment() {
         applyFABCallback(front, back)
     }
 
-    private fun applyFABCallback(front: CardFaceEntity, back: CardFaceEntity) {
+    private fun applyFABCallback(front: CardFace, back: CardFace) {
         binding.fabFlipArt.setOnClickListener {
             currentArt = if (currentArt == front.artImage) {
                 flipArt(back.artImage)

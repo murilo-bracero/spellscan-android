@@ -7,13 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.example.spellscanapp.R
-import com.example.spellscanapp.db.entity.CardEntity
+import com.example.spellscanapp.model.Card
 import com.example.spellscanapp.ui.CardDetailActivity
 import com.example.spellscanapp.ui.CardDetailActivity.Companion.CARD_ID_INTENT_KEY
 import com.example.spellscanapp.ui.CardDetailActivity.Companion.HAS_CARD_FACES_INTENT_KEY
@@ -21,7 +19,7 @@ import com.google.android.material.card.MaterialCardView
 
 @SuppressLint("NotifyDataSetChanged")
 class CardListAdapter(
-    private val dataset: List<CardEntity>
+    private val dataset: List<Card>
 ) : RecyclerView.Adapter<CardListAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -63,7 +61,7 @@ class CardListAdapter(
         holder.clickableCard.setOnClickListener {
             val intent = Intent(holder.itemView.context, CardDetailActivity::class.java)
             intent.putExtra(CARD_ID_INTENT_KEY, card.id)
-            intent.putExtra(HAS_CARD_FACES_INTENT_KEY, card.hasCardFaces)
+            intent.putExtra(HAS_CARD_FACES_INTENT_KEY, card.cardFaces.isNotEmpty())
             holder.itemView.context.startActivity(intent)
         }
 

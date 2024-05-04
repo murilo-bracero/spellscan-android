@@ -15,8 +15,8 @@ import coil.request.ImageRequest
 import com.example.spellscanapp.R
 import com.example.spellscanapp.converter.languageToResource
 import com.example.spellscanapp.converter.symbolToDrawable
-import com.example.spellscanapp.db.entity.CardEntity
-import com.example.spellscanapp.db.entity.CardFaceEntity
+import com.example.spellscanapp.model.Card
+import com.example.spellscanapp.model.CardFace
 import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
 
 suspend fun loadCard(
@@ -49,7 +49,7 @@ suspend fun loadCard(
 }
 
 fun renderFrontFace(
-    card: CardEntity?,
+    card: Card?,
     context: Context,
     cardCostContainer: ViewGroup,
     imageView: ImageView,
@@ -59,7 +59,7 @@ fun renderFrontFace(
     cardLangTextView: TextView,
     cardPrintedTextTextView: TextView
 ) {
-    if (card == null || !card.hasCardFaces) return
+    if (card == null || card.cardFaces.isEmpty()) return
 
     val face = card.cardFaces.first()
 
@@ -81,7 +81,7 @@ fun renderFrontFace(
 }
 
 fun renderBackFace(
-    face: CardFaceEntity?,
+    face: CardFace?,
     context: Context,
     cardNameTextView: TextView,
     cardTypeTextView: TextView,
@@ -96,7 +96,7 @@ fun renderBackFace(
 }
 
 private fun renderCardDetails(
-    card: CardEntity,
+    card: Card,
     context: Context,
     imageView: ImageView,
     cardCostContainer: ViewGroup,
@@ -113,7 +113,7 @@ private fun renderCardDetails(
         .build()
     imageLoader.enqueue(request)
 
-    loadManaCost(card.cost, context, cardCostContainer)
+    loadManaCost(card.manaCost, context, cardCostContainer)
 
     renderPrintedText(card.printedText, context, cardPrintedTextTextView)
 
