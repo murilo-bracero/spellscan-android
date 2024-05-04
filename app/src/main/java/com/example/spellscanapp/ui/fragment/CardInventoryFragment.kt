@@ -14,8 +14,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.FragmentCardInventoryBinding
-import com.example.spellscanapp.db.entity.CardEntity
 import com.example.spellscanapp.exception.ExpiredTokenException
+import com.example.spellscanapp.model.Card
 import com.example.spellscanapp.model.Inventory
 import com.example.spellscanapp.repository.AuthStateRepository
 import com.example.spellscanapp.service.AuthService
@@ -25,7 +25,6 @@ import com.example.spellscanapp.ui.adapter.CardListAdapter
 import com.example.spellscanapp.ui.fragment.component.SwipableListFragment
 import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
 import com.example.spellscanapp.ui.viewmodel.InventoryViewModel
-import com.spellscan.inventoryservice.InventoryResponse
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
@@ -119,8 +118,8 @@ class CardInventoryFragment : Fragment() {
             .commit()
     }
 
-    private suspend fun deleteCard(cardEntity: CardEntity) {
-        cardServiceViewModel.delete(cardEntity)
+    private suspend fun deleteCard(card: Card) {
+        cardServiceViewModel.delete(card)
         forceUpdate()
     }
 

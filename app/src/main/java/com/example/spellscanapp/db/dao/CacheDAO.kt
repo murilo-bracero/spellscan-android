@@ -2,12 +2,14 @@ package com.example.spellscanapp.db.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
 import com.example.spellscanapp.db.entity.CacheEntity
 
 @Dao
 interface CacheDAO {
-    @Insert
+    @Insert(onConflict = REPLACE)
     suspend fun save(cache: CacheEntity)
 
     @Query("SELECT * FROM backend_cache WHERE hash = :hash LIMIT 1")

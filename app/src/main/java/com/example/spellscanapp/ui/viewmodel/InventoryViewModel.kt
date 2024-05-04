@@ -55,7 +55,7 @@ class InventoryViewModel(application: Application) : AndroidViewModel(applicatio
         return buildInventory(inventory)
             .also {
                 cacheRepository.save(
-                    CacheEntity(hashKey, Gson().toJson(inventory))
+                    CacheEntity(hashKey, Gson().toJson(it))
                 )
             }
     }
