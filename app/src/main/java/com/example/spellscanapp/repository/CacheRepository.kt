@@ -28,7 +28,7 @@ class CacheRepository private constructor(context: Context) {
         val cached = db.cacheDao().findByHash(hash)
 
         if(cached != null && cached.validUntil < System.currentTimeMillis()) {
-            db.cacheDao().deleteByHash(hash)
+            deleteByHash(hash)
             return null
         }
 
