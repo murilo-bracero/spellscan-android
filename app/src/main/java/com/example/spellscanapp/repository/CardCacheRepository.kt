@@ -79,11 +79,6 @@ class CardCacheRepository(context: Context) {
         return card
     }
 
-    suspend fun findAll(): List<CardEntity> {
-        return db.cardDao().findAll()
-            .map { it.key.cardFaces.addAll(it.value); it.key }
-    }
-
     suspend fun findByNameAndTypeAndSet(name: String, type: String, set: String): CardEntity? {
         return db.cardDao().findByNameAndTypeAndSet(name, type, set)
     }

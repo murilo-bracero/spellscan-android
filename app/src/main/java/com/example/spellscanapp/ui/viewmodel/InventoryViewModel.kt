@@ -1,45 +1,62 @@
 package com.example.spellscanapp.ui.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
-import com.example.spellscanapp.model.dto.FilterDirection
+import android.app.Application
+import android.util.Log
+import androidx.lifecycle.AndroidViewModel
+import com.example.spellscanapp.db.entity.CacheEntity
+import com.example.spellscanapp.model.CacheCallEnum.GET_INVENTORIES
+import com.example.spellscanapp.model.CacheCallEnum.GET_INVENTORY_BY_ID
+import com.example.spellscanapp.model.Inventory
+import com.example.spellscanapp.model.buildInventory
+import com.example.spellscanapp.repository.CacheRepository
 import com.example.spellscanapp.service.InventoryService
-import com.spellscan.inventoryservice.InventoryResponse
+import com.example.spellscanapp.util.buildCacheHash
+import com.google.gson.Gson
 
-class InventoryViewModel : ViewModel() {
+class InventoryViewModel(application: Application) : AndroidViewModel(application) {
 
     private val inventoryService by lazy {
         InventoryService.newInstance()
     }
 
-    private val _inventoryDataset: MutableLiveData<MutableList<InventoryResponse>> by lazy {
-        MutableLiveData<MutableList<InventoryResponse>>()
+    private val cacheRepository by lazy {
+        CacheRepository.getInstance(application.baseContext)
     }
 
-    val inventoryDataset: LiveData<List<InventoryResponse>> = _inventoryDataset.map { it.toList() }
+    suspend fun loadInventories(accessToken: String): List<Inventory> {
+        val hashKey = buildCacheHash(GET_INVENTORIES)
+        val cached = cacheRepository.findByHash(hashKey)
 
-    suspend fun loadInventories(accessToken: String) {
-        _inventoryDataset.value = inventoryService.findInventories(accessToken)
-            .inventoriesList
-    }
+        Log.d("InventoryViewModel", "loadInventories: $cached")
 
-    suspend fun findInventoryById(accessToken: String, id: String): InventoryResponse {
-        return inventoryService.findInventoryById(accessToken, id)
-    }
-
-    fun sortByName(direction: FilterDirection?) {
-        if(direction == null) {
-            _inventoryDataset.value = _inventoryDataset.value?.sortedBy { it.id }?.toMutableList()
-            return
+        if (cached != null) {
+            return Gson().fromJson(cached.responsePayload, Array<Inventory>::class.java).toList()
         }
 
-        if (direction == FilterDirection.DESC) {
-            _inventoryDataset.value = _inventoryDataset.value?.sortedByDescending { it.name }?.toMutableList()
-            return
+        return inventoryService.findInventories(accessToken)
+            .inventoriesList.map { buildInventory(it) }
+            .also {
+                cacheRepository.save(CacheEntity(hashKey, Gson().toJson(it)))
+            }
+    }
+
+    suspend fun findInventoryById(accessToken: String, id: String): Inventory {
+        val hashKey = buildCacheHash(GET_INVENTORY_BY_ID, id)
+        val cached = cacheRepository.findByHash(hashKey)
+
+        Log.d("InventoryViewModel", "findInventoryById: $cached")
+
+        if (cached != null) {
+            return Gson().fromJson(cached.responsePayload, Inventory::class.java)
         }
 
-        _inventoryDataset.value = _inventoryDataset.value?.sortedBy { it.name }?.toMutableList()
+        val inventory = inventoryService.findInventoryById(accessToken, id)
+
+        return buildInventory(inventory)
+            .also {
+                cacheRepository.save(
+                    CacheEntity(hashKey, Gson().toJson(inventory))
+                )
+            }
     }
 }

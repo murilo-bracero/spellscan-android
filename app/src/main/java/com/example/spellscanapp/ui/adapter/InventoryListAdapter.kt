@@ -1,33 +1,19 @@
 package com.example.spellscanapp.ui.adapter
 
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spellscanapp.R
-import com.example.spellscanapp.ui.CardDetailActivity
+import com.example.spellscanapp.model.Inventory
 import com.example.spellscanapp.ui.CardListActivity
 import com.google.android.material.card.MaterialCardView
-import com.spellscan.inventoryservice.InventoryResponse
 
-@SuppressLint("NotifyDataSetChanged")
 class InventoryListAdapter(
-    private val liveDataSet: LiveData<List<InventoryResponse>>,
-    lifecycleOwner: LifecycleOwner
+    private val dataset: List<Inventory>,
 ) : RecyclerView.Adapter<InventoryListAdapter.ViewHolder>() {
-
-    init {
-        liveDataSet.observe(lifecycleOwner) {
-            Log.d(TAG, "updated live data set with value: inventory=$it")
-            notifyDataSetChanged()
-        }
-    }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val clickableCard: MaterialCardView
@@ -50,10 +36,9 @@ class InventoryListAdapter(
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int = liveDataSet.value?.size ?: 0
+    override fun getItemCount(): Int = dataset.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val dataset = liveDataSet.value ?: emptyList()
         val inventory = dataset[position]
 
         holder.clickableCard.setOnClickListener {
@@ -63,8 +48,7 @@ class InventoryListAdapter(
         }
 
         holder.inventoryName.text = inventory.name
-        holder.totalCards.text = holder.totalCards.text.toString()
-            .replace("{totalCards}", inventory.cardIdsCount.toString())
+        holder.totalCards.text = holder.totalCards.text.toString().format(inventory.cardIdsCount)
     }
 
     companion object {

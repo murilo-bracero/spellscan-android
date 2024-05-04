@@ -16,6 +16,7 @@ import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.FragmentCardInventoryBinding
 import com.example.spellscanapp.db.entity.CardEntity
 import com.example.spellscanapp.exception.ExpiredTokenException
+import com.example.spellscanapp.model.Inventory
 import com.example.spellscanapp.repository.AuthStateRepository
 import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.service.CardService
@@ -94,13 +95,13 @@ class CardInventoryFragment : Fragment() {
         return binding.root
     }
 
-    private suspend fun renderInventory(inventory: InventoryResponse?) {
+    private suspend fun renderInventory(inventory: Inventory?) {
         if (inventory == null) {
             Log.d("CardInventoryFragment", "inventory is null: inventoryId=$inventoryId")
             return
         }
 
-        val dataset = inventory.cardIdsList
+        val dataset = inventory.cardIds
             .map { cardServiceViewModel.findById(it)!! }
 
         val adapter = CardListAdapter(dataset)
