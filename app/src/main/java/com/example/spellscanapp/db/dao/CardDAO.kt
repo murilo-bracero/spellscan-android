@@ -13,13 +13,15 @@ interface CardDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun save(card: CardEntity)
 
-    @Query("SELECT * FROM cards WHERE id = :id LIMIT 1")
-    suspend fun findById(id: String): CardEntity
+    @Query("SELECT * FROM cards WHERE id = :id")
+    suspend fun findById(id: String): CardEntity?
 
+    @Deprecated("Use cache database structure instead")
     @Query("SELECT * FROM cards " +
             "LEFT JOIN card_faces ON cards.id = card_faces.card_id")
     suspend fun findAll(): Map<CardEntity, List<CardFaceEntity>>
 
+    @Deprecated("Use cache database structure instead")
     @Query("SELECT * FROM cards WHERE name = :name AND type = :type AND card_set = :set LIMIT 1")
     suspend fun findByNameAndTypeAndSet(name: String, type: String, set: String): CardEntity?
 

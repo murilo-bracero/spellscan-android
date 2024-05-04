@@ -63,8 +63,8 @@ class CardCacheRepository(context: Context) {
         return entity
     }
 
-    suspend fun findById(id: String): CardEntity {
-        val card = db.cardDao().findById(id)
+    suspend fun findById(id: String): CardEntity? {
+        val card = db.cardDao().findById(id) ?: return null
 
         if (!card.hasCardFaces) {
             return card
@@ -77,11 +77,6 @@ class CardCacheRepository(context: Context) {
         }
 
         return card
-    }
-
-    suspend fun findAll(): List<CardEntity> {
-        return db.cardDao().findAll()
-            .map { it.key.cardFaces.addAll(it.value); it.key }
     }
 
     suspend fun findByNameAndTypeAndSet(name: String, type: String, set: String): CardEntity? {

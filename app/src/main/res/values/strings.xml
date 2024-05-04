@@ -24,4 +24,11 @@
     <string name="sign_in">Sign In</string>
     <string name="or_create_your_account_now"><u>Log in if you already have an account</u></string>
     <string name="logout">Logout</string>
+    <string name="inventory_placeholder">MyCollection</string>
+    <string name="totalcards_cards">%d Cards</string>
+    <string name="name_a_z">Name [A-Z]</string>
+    <string name="name_z_a">Name [Z-A]</string>
+    <string name="creation_date_newer">Creation Date (newer)</string>
+    <string name="creation_date_older">Creation Date (older)</string>
+    <string name="clear_filter">Clear Filter</string>
 </resources>
