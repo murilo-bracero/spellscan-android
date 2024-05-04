@@ -80,14 +80,13 @@ class AuthorizationProvider(private val activity: FragmentActivity) {
 
     companion object {
         private const val TAG = "AuthorizationProvider"
-        private const val TOKEN_ENDPOINT =
+        const val TOKEN_ENDPOINT =
             "https://$OIDC_HOST/realms/spellscan/protocol/openid-connect/token"
         private const val AUTH_ENDPOINT =
             "https://$OIDC_HOST/realms/spellscan/protocol/openid-connect/auth"
-        private const val CLIENT_ID = "spellscan-mobile-app"
+        const val CLIENT_ID = "spellscan-mobile-app"
         private const val REDIRECT_URI = "com.example.spellscanapp:/oauth2redirect"
         private const val LOGOUT_URI = "com.example.spellscanapp:/logout"
-        private const val AUTH_STATE = "auth_state"
 
         val AUTHORIZATION_CONFIG: AuthorizationServiceConfiguration =
             AuthorizationServiceConfiguration(

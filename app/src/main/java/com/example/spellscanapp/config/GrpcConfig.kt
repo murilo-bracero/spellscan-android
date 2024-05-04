@@ -1,8 +1,8 @@
 package com.example.spellscanapp.config
 
 import com.example.spellscanapp.BuildConfig.BACKEND_HOST
-import com.example.spellscanapp.BuildConfig.BACKEND_PORT
 import com.spellscan.cardservice.CardServiceGrpc
+import com.spellscan.inventoryservice.InventoryServiceGrpc
 import io.grpc.ManagedChannel
 import io.grpc.okhttp.OkHttpChannelBuilder
 
@@ -15,13 +15,18 @@ class GrpcConfig {
         return CardServiceGrpc.newFutureStub(channel)
     }
 
+    fun getInventoryServiceGrpcStub(): InventoryServiceGrpc.InventoryServiceBlockingStub {
+        startChannel()
+        return InventoryServiceGrpc.newBlockingStub(channel)
+    }
+
     private fun startChannel() {
         if(channel != null) {
             return
         }
 
         channel = OkHttpChannelBuilder
-            .forAddress(BACKEND_HOST, BACKEND_PORT)
+            .forAddress(BACKEND_HOST, 443)
             .useTransportSecurity()
             .build()
     }

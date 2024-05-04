@@ -33,7 +33,7 @@ suspend fun loadCard(
 ) {
     if (cardId == null) return
 
-    val card = cardServiceViewModel.findById(cardId)
+    val card = cardServiceViewModel.findById(cardId) ?: return
 
     renderCardDetails(
         card,

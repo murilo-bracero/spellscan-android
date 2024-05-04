@@ -1,10 +1,13 @@
 package com.example.spellscanapp.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -12,13 +15,18 @@ import androidx.lifecycle.lifecycleScope
 import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.FragmentCardInventoryBinding
 import com.example.spellscanapp.db.entity.CardEntity
+import com.example.spellscanapp.exception.ExpiredTokenException
+import com.example.spellscanapp.model.Inventory
 import com.example.spellscanapp.repository.AuthStateRepository
 import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.service.CardService
-import com.example.spellscanapp.ui.adapter.InventoryListAdapter
+import com.example.spellscanapp.ui.LoginAdapterActivity
+import com.example.spellscanapp.ui.adapter.CardListAdapter
 import com.example.spellscanapp.ui.fragment.component.SwipableListFragment
-import com.example.spellscanapp.ui.viewmodel.CardInventoryViewModel
 import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
+import com.example.spellscanapp.ui.viewmodel.InventoryViewModel
+import com.spellscan.inventoryservice.InventoryResponse
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
 class CardInventoryFragment : Fragment() {
@@ -29,14 +37,31 @@ class CardInventoryFragment : Fragment() {
     }
 
     private val cardServiceViewModel: CardServiceViewModel by activityViewModels()
-    private val cardInventoryViewModel: CardInventoryViewModel by activityViewModels()
+    private val inventoryViewModel: InventoryViewModel by activityViewModels()
 
     private lateinit var cardService: CardService
     private lateinit var binding: FragmentCardInventoryBinding
 
+    private var inventoryId: String? = null
+
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
+        if(exception is ExpiredTokenException) {
+            Log.d(InventoryListFragment.TAG, "Handling ExpiredTokenException")
+            val intent = Intent(requireContext(), LoginAdapterActivity::class.java)
+            return@CoroutineExceptionHandler startActivity(intent)
+        }
+
+        Log.d(InventoryListFragment.TAG, "Handling Unchecked Exception", exception)
+        Toast.makeText(requireContext(), "Something went wrong", Toast.LENGTH_SHORT).show()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         cardService = CardService.newInstance()
+
+        arguments?.let {
+            inventoryId = it.getString(ARG_INVENTORY_ID)
+        }
     }
 
     override fun onCreateView(
@@ -46,37 +71,55 @@ class CardInventoryFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentCardInventoryBinding.inflate(layoutInflater, container, false)
 
-        lifecycleScope.launch {
-            val dataset = cardServiceViewModel.findAll()
-
-            cardInventoryViewModel.setCardDataset(dataset)
-
-            val adapter = InventoryListAdapter(cardInventoryViewModel.cardDataset, viewLifecycleOwner)
-
-            if (savedInstanceState == null) {
-                childFragmentManager.beginTransaction()
-                    .replace(R.id.local_list_fragment_container, SwipableListFragment(adapter, {
-                        lifecycleScope.launch {
-                            deleteCard(it, dataset[it])
-                        }
-                    }, {
-                        lifecycleScope.launch {
-                            deleteCard(it, dataset[it])
-                        }
-                    }))
-                    .commit()
-            }
-        }
-
         binding.listMenu.setOnClickListener {
             showPopup(it)
+        }
+
+        lifecycleScope.launch(coroutineExceptionHandler) {
+            if (inventoryId == null) {
+                Log.d("CardInventoryFragment", "inventoryId is null")
+                return@launch
+            }
+
+            authService.applyAccessToken(requireContext()) {
+                launch {
+                    val inventory = inventoryViewModel.findInventoryById(it, inventoryId!!)
+
+                    if (savedInstanceState == null) {
+                        renderInventory(inventory)
+                    }
+                }
+            }
         }
 
         return binding.root
     }
 
-    private suspend fun deleteCard(index: Int, cardEntity: CardEntity) {
-        cardInventoryViewModel.removeByIndex(index)
+    private suspend fun renderInventory(inventory: Inventory?) {
+        if (inventory == null) {
+            Log.d("CardInventoryFragment", "inventory is null: inventoryId=$inventoryId")
+            return
+        }
+
+        val dataset = inventory.cardIds
+            .map { cardServiceViewModel.findById(it)!! }
+
+        val adapter = CardListAdapter(dataset)
+
+        childFragmentManager.beginTransaction()
+            .replace(R.id.local_list_fragment_container, SwipableListFragment(adapter, {
+                lifecycleScope.launch {
+                    deleteCard(dataset[it])
+                }
+            }, {
+                lifecycleScope.launch {
+                    deleteCard(dataset[it])
+                }
+            }))
+            .commit()
+    }
+
+    private suspend fun deleteCard(cardEntity: CardEntity) {
         cardServiceViewModel.delete(cardEntity)
         forceUpdate()
     }
@@ -105,5 +148,18 @@ class CardInventoryFragment : Fragment() {
 
     private fun forceUpdate() {
         binding.localListFragmentContainer.getFragment<SwipableListFragment>().forceUpdate()
+    }
+
+    companion object {
+
+        private const val ARG_INVENTORY_ID = "inventoryId"
+
+        @JvmStatic
+        fun newInstance(inventoryId: String?) =
+            CardInventoryFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_INVENTORY_ID, inventoryId)
+                }
+            }
     }
 }
