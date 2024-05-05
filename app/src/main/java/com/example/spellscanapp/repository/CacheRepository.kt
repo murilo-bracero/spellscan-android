@@ -20,7 +20,7 @@ class CacheRepository private constructor(context: Context) {
     }
 
     suspend fun save(entity: CacheEntity) {
-        entity.validUntil = System.currentTimeMillis() + 1000 * 60 * 60
+        entity.validUntil = System.currentTimeMillis() + UNIX_CACHE_SECONDS
         db.cacheDao().save(entity)
     }
 
@@ -39,7 +39,14 @@ class CacheRepository private constructor(context: Context) {
         db.cacheDao().deleteByHash(hash)
     }
 
+    suspend fun deleteAll() {
+        db.cacheDao().deleteAll()
+    }
+
     companion object {
+
+        // 30 minutes in milliseconds
+        const val UNIX_CACHE_SECONDS = 1000 * 30 * 60
 
         @Volatile
         private var instance: CacheRepository? = null
