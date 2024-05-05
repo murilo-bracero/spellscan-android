@@ -1,6 +1,7 @@
 package com.example.spellscanapp.service
 
 import com.example.spellscanapp.config.GrpcConfig
+import com.spellscan.inventoryservice.AddToInventoryRequest
 import com.spellscan.inventoryservice.Empty
 import com.spellscan.inventoryservice.FindInventoriesByOwnerIdResponse
 import com.spellscan.inventoryservice.FindInventoryByIdRequest
@@ -34,6 +35,12 @@ class InventoryService(
         withContext(Dispatchers.IO) {
             stub.withInterceptors(metadataInterceptor(accessToken))
                 .findInventoryById(FindInventoryByIdRequest.newBuilder().setId(id).build())
+        }
+
+    suspend fun addToInventory(accessToken: String, cardId: String): Empty =
+        withContext(Dispatchers.IO) {
+            stub.withInterceptors(metadataInterceptor(accessToken))
+                .addToInventory(AddToInventoryRequest.newBuilder().setCardId(cardId).build())
         }
 
     companion object {

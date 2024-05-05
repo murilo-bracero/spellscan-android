@@ -17,4 +17,7 @@ interface CacheDAO {
 
     @Query("DELETE FROM backend_cache WHERE hash = :hash")
     suspend fun deleteByHash(hash: String)
+
+    @Query("DELETE FROM backend_cache")
+    suspend fun deleteAll()
 }
