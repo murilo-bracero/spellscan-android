@@ -59,4 +59,13 @@ class InventoryViewModel(application: Application) : AndroidViewModel(applicatio
                 )
             }
     }
+
+    suspend fun addCardToInventory(accessToken: String, cardId: String) {
+        inventoryService.addToInventory(accessToken, cardId)
+
+        // TODO: Change this to remove only loadInventories and findInventoryById
+        //  when we have current technology to add a card to a specific inventory
+
+        cacheRepository.deleteAll()
+    }
 }
