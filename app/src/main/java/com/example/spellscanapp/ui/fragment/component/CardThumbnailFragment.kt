@@ -68,19 +68,19 @@ class CardThumbnailFragment : Fragment() {
         }
 
         lifecycleScope.launch(handler) {
-            val card = cardServiceViewModel.search(card)
+            val found = cardServiceViewModel.search(card)
 
             if(!authService.isAuthorized(requireContext())) {
                 val intent = Intent(requireContext(), CardDetailActivity::class.java)
-                intent.putExtra(CARD_ID_INTENT_KEY, card.id)
-                intent.putExtra(HAS_CARD_FACES_INTENT_KEY, card.cardFaces.isNotEmpty())
+                intent.putExtra(CARD_ID_INTENT_KEY, found.id)
+                intent.putExtra(HAS_CARD_FACES_INTENT_KEY, found.cardFaces.isNotEmpty())
                 requireContext().startActivity(intent)
                 return@launch
             }
 
             authService.applyAccessToken(requireContext()) {
                 launch {
-                    inventoryViewModel.addCardToInventory(it, card.id)
+                    inventoryViewModel.addCardToInventory(it, found.id)
                 }
             }
         }
