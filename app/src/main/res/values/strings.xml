@@ -31,4 +31,7 @@
     <string name="creation_date_newer">Creation Date (newer)</string>
     <string name="creation_date_older">Creation Date (older)</string>
     <string name="clear_filter">Clear Filter</string>
+    <string name="scan_button_text">Scan</string>
+    <string name="add_to_inventory">Add to inventory</string>
+    <string name="add_to">Add to:</string>
 </resources>

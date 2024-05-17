@@ -37,10 +37,13 @@ class InventoryService(
                 .findInventoryById(FindInventoryByIdRequest.newBuilder().setId(id).build())
         }
 
-    suspend fun addToInventory(accessToken: String, cardId: String): Empty =
+    suspend fun addToInventory(accessToken: String, inventoryId: String, cardId: String): Empty =
         withContext(Dispatchers.IO) {
             stub.withInterceptors(metadataInterceptor(accessToken))
-                .addToInventory(AddToInventoryRequest.newBuilder().setCardId(cardId).build())
+                .addToInventory(AddToInventoryRequest.newBuilder()
+                    .setInventoryId(inventoryId)
+                    .setCardId(cardId)
+                    .build())
         }
 
     companion object {

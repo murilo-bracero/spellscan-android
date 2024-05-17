@@ -171,10 +171,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="40dp"
                 android:layout_marginTop="25dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/add_to_inventory_fragment_container"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/back_detail_type"
                 app:layout_constraintVertical_bias="0.0" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/add_to_inventory_fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/back_detail_text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintVertical_bias="0.13"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

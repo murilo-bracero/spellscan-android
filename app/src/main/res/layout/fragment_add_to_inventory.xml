@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragment.component.AddToInventoryFragment">
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/save_to_inventory_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:chipStartPadding="17dp"
+        app:chipEndPadding="17dp"
+        android:text="@string/add_to_inventory"
+        android:textStyle="bold"
+        android:textSize="17sp"/>
+
+</FrameLayout>

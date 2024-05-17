@@ -1,6 +1,5 @@
 package com.example.spellscanapp.ui.adapter
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spellscanapp.R
 import com.example.spellscanapp.model.Inventory
-import com.example.spellscanapp.ui.CardListActivity
 import com.google.android.material.card.MaterialCardView
 
 class InventoryListAdapter(
     private val dataset: List<Inventory>,
+    private val onInventoryClick: (Inventory) -> Unit
 ) : RecyclerView.Adapter<InventoryListAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -31,7 +30,7 @@ class InventoryListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.inventory_grid_item, parent, false)
+            .inflate(R.layout.inventory_list_item, parent, false)
 
         return ViewHolder(view)
     }
@@ -42,9 +41,7 @@ class InventoryListAdapter(
         val inventory = dataset[position]
 
         holder.clickableCard.setOnClickListener {
-            val intent = Intent(holder.itemView.context, CardListActivity::class.java)
-            intent.putExtra(CardListActivity.INVENTORY_ID_KEY, inventory.id)
-            holder.itemView.context.startActivity(intent)
+            onInventoryClick(inventory)
         }
 
         holder.inventoryName.text = inventory.name

@@ -54,10 +54,10 @@
         app:layout_constraintGuide_percent="0.5" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/addCardButton"
+        android:id="@+id/scan_card_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_button_text"
+        android:text="@string/scan_button_text"
         app:cornerRadius="16dp"
         android:backgroundTint="@color/material_dynamic_primary70"
         app:layout_constraintBottom_toBottomOf="parent"

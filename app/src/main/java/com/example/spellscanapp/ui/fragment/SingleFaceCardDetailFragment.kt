@@ -6,8 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import androidx.lifecycle.lifecycleScope
 import com.example.spellscanapp.databinding.FragmentSingleFaceCardDetailBinding
+import com.example.spellscanapp.repository.AuthStateRepository
+import com.example.spellscanapp.service.AuthService
+import com.example.spellscanapp.ui.fragment.component.AddToInventoryFragment
 import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
 import com.example.spellscanapp.util.loadCard
 import kotlinx.coroutines.launch
@@ -22,6 +27,11 @@ class SingleFaceCardDetailFragment : Fragment() {
 
     private lateinit var binding: FragmentSingleFaceCardDetailBinding
 
+    private val authService by lazy {
+        val repo = AuthStateRepository()
+        AuthService(repo)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -34,6 +44,12 @@ class SingleFaceCardDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSingleFaceCardDetailBinding.inflate(layoutInflater, container, false)
+
+        if (savedInstanceState == null && authService.isAuthorized(requireContext())) {
+            childFragmentManager.commit {
+                replace(binding.addToInventoryFragmentContainer.id, AddToInventoryFragment.newInstance(cardId))
+            }
+        }
 
         lifecycleScope.launch {
             loadCard(

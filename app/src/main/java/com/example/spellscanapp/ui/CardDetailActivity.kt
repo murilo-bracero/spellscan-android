@@ -1,12 +1,30 @@
 package com.example.spellscanapp.ui
 
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.Menu.NONE
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
+import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.ActivityCardDetailBinding
+import com.example.spellscanapp.repository.AuthStateRepository
+import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.ui.fragment.DoubleFaceCardDetailFragment
 import com.example.spellscanapp.ui.fragment.SingleFaceCardDetailFragment
+import com.example.spellscanapp.ui.viewmodel.InventoryViewModel
+import kotlinx.coroutines.launch
 
 class CardDetailActivity : AppCompatActivity() {
 
@@ -35,7 +53,6 @@ class CardDetailActivity : AppCompatActivity() {
                 )
             }
         }
-
         setContentView(binding.root)
     }
 
