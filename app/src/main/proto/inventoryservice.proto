@@ -42,6 +42,7 @@ message InventoryResponse {
 
 message AddToInventoryRequest {
   string cardId = 1;
+  string inventoryId = 2;
 }
 
 message Empty {

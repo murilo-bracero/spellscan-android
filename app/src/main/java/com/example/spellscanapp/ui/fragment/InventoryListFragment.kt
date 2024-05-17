@@ -11,10 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.spellscanapp.databinding.FragmentInventoryListBinding
 import com.example.spellscanapp.exception.ExpiredTokenException
 import com.example.spellscanapp.repository.AuthStateRepository
 import com.example.spellscanapp.service.AuthService
+import com.example.spellscanapp.ui.CardListActivity
 import com.example.spellscanapp.ui.LoginAdapterActivity
 import com.example.spellscanapp.ui.adapter.InventoryListAdapter
 import com.example.spellscanapp.ui.viewmodel.InventoryViewModel
@@ -30,7 +32,7 @@ class InventoryListFragment : Fragment() {
     private lateinit var binding: FragmentInventoryListBinding
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
-        if(exception is ExpiredTokenException) {
+        if (exception is ExpiredTokenException) {
             Log.d(TAG, "Handling ExpiredTokenException")
             val intent = Intent(requireContext(), LoginAdapterActivity::class.java)
             return@CoroutineExceptionHandler startActivity(intent)
@@ -47,13 +49,17 @@ class InventoryListFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentInventoryListBinding.inflate(inflater, container, false)
 
-        binding.inventoryGridView.layoutManager = GridLayoutManager(context, 2)
+        binding.inventoryGridView.layoutManager = LinearLayoutManager(context)
 
         lifecycleScope.launch(coroutineExceptionHandler) {
             authService.applyAccessToken(requireContext()) {
                 launch {
                     val dataset = inventoryViewModel.loadInventories(it)
-                    binding.inventoryGridView.adapter = InventoryListAdapter(dataset)
+                    binding.inventoryGridView.adapter = InventoryListAdapter(dataset) {
+                        val intent = Intent(requireContext(), CardListActivity::class.java)
+                        intent.putExtra(CardListActivity.INVENTORY_ID_KEY, it.id)
+                        startActivity(intent)
+                    }
                 }
             }
         }

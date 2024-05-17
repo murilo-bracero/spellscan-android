@@ -60,12 +60,13 @@ class InventoryViewModel(application: Application) : AndroidViewModel(applicatio
             }
     }
 
-    suspend fun addCardToInventory(accessToken: String, cardId: String) {
-        inventoryService.addToInventory(accessToken, cardId)
+    suspend fun addCardToInventory(accessToken: String, inventoryId: String, cardId: String) {
+        inventoryService.addToInventory(accessToken, inventoryId, cardId)
 
-        // TODO: Change this to remove only loadInventories and findInventoryById
-        //  when we have current technology to add a card to a specific inventory
+        var hashKey = buildCacheHash(GET_INVENTORY_BY_ID, inventoryId)
+        cacheRepository.deleteByHash(hashKey)
 
-        cacheRepository.deleteAll()
+        hashKey = buildCacheHash(GET_INVENTORIES)
+        cacheRepository.deleteByHash(hashKey)
     }
 }

@@ -48,7 +48,7 @@ class CardListAdapter(
         viewType: Int
     ): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.inventory_row_item, parent, false)
+            .inflate(R.layout.card_row_item, parent, false)
 
         return ViewHolder(view)
     }
