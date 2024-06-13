@@ -4,11 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -45,12 +43,12 @@ class CardInventoryFragment : Fragment() {
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
         if(exception is ExpiredTokenException) {
-            Log.d(InventoryListFragment.TAG, "Handling ExpiredTokenException")
+            Log.d(TAG, "Handling ExpiredTokenException")
             val intent = Intent(requireContext(), LoginAdapterActivity::class.java)
             return@CoroutineExceptionHandler startActivity(intent)
         }
 
-        Log.d(InventoryListFragment.TAG, "Handling Unchecked Exception", exception)
+        Log.d(TAG, "Handling Unchecked Exception", exception)
         Toast.makeText(requireContext(), "Something went wrong", Toast.LENGTH_SHORT).show()
     }
 
@@ -70,13 +68,9 @@ class CardInventoryFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentCardInventoryBinding.inflate(layoutInflater, container, false)
 
-        binding.listMenu.setOnClickListener {
-            showPopup(it)
-        }
-
         lifecycleScope.launch(coroutineExceptionHandler) {
             if (inventoryId == null) {
-                Log.d("CardInventoryFragment", "inventoryId is null")
+                Log.d(TAG, "inventoryId is null")
                 return@launch
             }
 
@@ -96,7 +90,7 @@ class CardInventoryFragment : Fragment() {
 
     private suspend fun renderInventory(inventory: Inventory?) {
         if (inventory == null) {
-            Log.d("CardInventoryFragment", "inventory is null: inventoryId=$inventoryId")
+            Log.d(TAG, "inventory is null: inventoryId=$inventoryId")
             return
         }
 
@@ -123,34 +117,13 @@ class CardInventoryFragment : Fragment() {
         forceUpdate()
     }
 
-    private fun showPopup(v: View) {
-        val popup = PopupMenu(requireContext(), v)
-        val inflater: MenuInflater = popup.menuInflater
-        inflater.inflate(R.menu.card_list_menu, popup.menu)
-        popup.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.clear_list_action -> {
-                    return@setOnMenuItemClickListener true
-                }
-
-                R.id.logout_action -> {
-                    authService.logout(requireContext())
-                    return@setOnMenuItemClickListener true
-                }
-
-                else -> false
-            }
-        }
-        popup.setForceShowIcon(true)
-        popup.show()
-    }
-
     private fun forceUpdate() {
         binding.localListFragmentContainer.getFragment<SwipableListFragment>().forceUpdate()
     }
 
     companion object {
 
+        private const val TAG = "CardInventoryFragment"
         private const val ARG_INVENTORY_ID = "inventoryId"
 
         @JvmStatic

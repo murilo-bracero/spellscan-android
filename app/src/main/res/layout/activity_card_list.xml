@@ -4,7 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.CardListActivity">
+    tools:context=".ui.CardListActivity"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/card_inventory_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#263238"
+        app:title=" "
+        app:menu="@menu/card_list_toolbar_menu"/>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/card_inventory_fragment_container_view"

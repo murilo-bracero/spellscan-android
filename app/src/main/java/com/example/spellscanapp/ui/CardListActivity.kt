@@ -1,16 +1,27 @@
 package com.example.spellscanapp.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.ActivityCardListBinding
+import com.example.spellscanapp.repository.AuthStateRepository
+import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.ui.fragment.CardInventoryFragment
 
 class CardListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCardListBinding
+
+    private val authService: AuthService by lazy {
+        val repo = AuthStateRepository()
+        AuthService(repo)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +38,44 @@ class CardListActivity : AppCompatActivity() {
         }
 
         setContentView(binding.root)
+        setSupportActionBar(binding.cardInventoryToolbar)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.card_list_toolbar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.options_menu_item -> {
+                showPopup(findViewById(R.id.options_menu_item))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun showPopup(v: View) {
+        val popup = PopupMenu(this, v)
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.card_list_menu, popup.menu)
+        popup.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.clear_list_action -> {
+                    return@setOnMenuItemClickListener true
+                }
+
+                R.id.logout_action -> {
+                    authService.logout(this)
+                    return@setOnMenuItemClickListener true
+                }
+
+                else -> false
+            }
+        }
+        popup.setForceShowIcon(true)
+        popup.show()
     }
 
     companion object {
