@@ -15,10 +15,9 @@ import com.example.spellscanapp.databinding.FragmentCardInventoryBinding
 import com.example.spellscanapp.exception.ExpiredTokenException
 import com.example.spellscanapp.model.Card
 import com.example.spellscanapp.model.Inventory
-import com.example.spellscanapp.repository.AuthStateRepository
 import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.service.CardService
-import com.example.spellscanapp.ui.LoginAdapterActivity
+import com.example.spellscanapp.ui.LoginActivity
 import com.example.spellscanapp.ui.adapter.CardListAdapter
 import com.example.spellscanapp.ui.fragment.component.SwipableListFragment
 import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
@@ -29,8 +28,7 @@ import kotlinx.coroutines.launch
 class CardInventoryFragment : Fragment() {
 
     private val authService: AuthService by lazy {
-        val repo = AuthStateRepository()
-        AuthService(repo)
+        AuthService(requireContext())
     }
 
     private val cardServiceViewModel: CardServiceViewModel by activityViewModels()
@@ -44,7 +42,7 @@ class CardInventoryFragment : Fragment() {
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
         if(exception is ExpiredTokenException) {
             Log.d(TAG, "Handling ExpiredTokenException")
-            val intent = Intent(requireContext(), LoginAdapterActivity::class.java)
+            val intent = Intent(requireContext(), LoginActivity::class.java)
             return@CoroutineExceptionHandler startActivity(intent)
         }
 
@@ -74,7 +72,7 @@ class CardInventoryFragment : Fragment() {
                 return@launch
             }
 
-            authService.applyAccessToken(requireContext()) {
+            authService.applyAccessToken {
                 launch {
                     val inventory = inventoryViewModel.findInventoryById(it, inventoryId!!)
 

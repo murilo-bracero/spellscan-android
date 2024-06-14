@@ -5,6 +5,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.protobuf")
     id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -119,7 +120,8 @@ dependencies {
     ksp("androidx.room:room-compiler:$room_version")
 
     // auth
-    implementation("net.openid:appauth:$appauth_version")
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation("com.google.firebase:firebase-auth")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-inline:5.2.0")

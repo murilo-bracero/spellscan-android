@@ -10,7 +10,6 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.commit
 import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.ActivityCardListBinding
-import com.example.spellscanapp.repository.AuthStateRepository
 import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.ui.fragment.CardInventoryFragment
 
@@ -19,8 +18,7 @@ class CardListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCardListBinding
 
     private val authService: AuthService by lazy {
-        val repo = AuthStateRepository()
-        AuthService(repo)
+        AuthService(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +65,7 @@ class CardListActivity : AppCompatActivity() {
                 }
 
                 R.id.logout_action -> {
-                    authService.logout(this)
+                    authService.logout()
                     return@setOnMenuItemClickListener true
                 }
 
