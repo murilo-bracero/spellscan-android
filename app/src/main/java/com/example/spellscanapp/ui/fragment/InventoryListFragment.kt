@@ -25,7 +25,9 @@ class InventoryListFragment : Fragment() {
 
     private val inventoryViewModel: InventoryViewModel by activityViewModels()
 
-    private val authService = AuthService(requireContext())
+    private val authService: AuthService by lazy {
+        AuthService(requireContext())
+    }
 
     private lateinit var binding: FragmentInventoryListBinding
 
