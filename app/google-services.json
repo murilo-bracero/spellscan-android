@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "132488835426",
+    "project_id": "spellscan-auth-dev",
+    "storage_bucket": "spellscan-auth-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132488835426:android:576c9af3422f9dc2387c3b",
+        "android_client_info": {
+          "package_name": "com.example.spellscanapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrXAf4diKY0IZsF0KoSEbZ3IcI9okn2G0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

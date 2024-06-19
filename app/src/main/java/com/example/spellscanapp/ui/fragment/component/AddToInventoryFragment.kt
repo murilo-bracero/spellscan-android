@@ -20,11 +20,10 @@ import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.FragmentAddToInventoryBinding
 import com.example.spellscanapp.exception.ExpiredTokenException
 import com.example.spellscanapp.model.Inventory
-import com.example.spellscanapp.repository.AuthStateRepository
 import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.ui.CardListActivity
 import com.example.spellscanapp.ui.CardListActivity.Companion.INVENTORY_ID_KEY
-import com.example.spellscanapp.ui.LoginAdapterActivity
+import com.example.spellscanapp.ui.LoginActivity
 import com.example.spellscanapp.ui.adapter.InventoryListAdapter
 import com.example.spellscanapp.ui.fragment.InventoryListFragment
 import com.example.spellscanapp.ui.viewmodel.InventoryViewModel
@@ -43,16 +42,15 @@ class AddToInventoryFragment : Fragment() {
     private var inventories: List<Inventory>? = null
 
     private val authService: AuthService by lazy {
-        val repo = AuthStateRepository()
-        AuthService(repo)
+        AuthService(requireContext())
     }
 
     private lateinit var binding: FragmentAddToInventoryBinding
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
-        if(exception is ExpiredTokenException) {
+        if (exception is ExpiredTokenException) {
             Log.d(InventoryListFragment.TAG, "Handling ExpiredTokenException")
-            val intent = Intent(requireContext(), LoginAdapterActivity::class.java)
+            val intent = Intent(requireContext(), LoginActivity::class.java)
             return@CoroutineExceptionHandler startActivity(intent)
         }
 
@@ -75,7 +73,7 @@ class AddToInventoryFragment : Fragment() {
         binding = FragmentAddToInventoryBinding.inflate(inflater, container, false)
 
         lifecycleScope.launch(coroutineExceptionHandler) {
-            authService.applyAccessToken(requireContext()) { accessToken ->
+            authService.applyAccessToken { accessToken ->
                 launch {
                     inventories = inventoryViewModel.loadInventories(accessToken)
                 }
@@ -108,7 +106,7 @@ class AddToInventoryFragment : Fragment() {
 
         val recyclerView = popupView.findViewById<RecyclerView>(R.id.inventories_select_list)
 
-        Log.d("AddToInventoryFragment", "inventories: $inventories")
+        Log.d(TAG, "inventories: $inventories")
 
         val adapter = InventoryListAdapter(inventories) {
             addCardToInventory(cardId!!, it.id, popupWindow)
@@ -118,17 +116,11 @@ class AddToInventoryFragment : Fragment() {
     }
 
     private fun addCardToInventory(cardId: String, inventoryId: String, popupWindow: PopupWindow) {
-        Log.d(
-            "AddToInventoryFragment",
-            "adding card to inventory: cardId=$cardId, inventoryId=$inventoryId"
-        )
+        Log.d(TAG, "adding card to inventory: cardId=$cardId, inventoryId=$inventoryId")
         lifecycleScope.launch {
-            authService.applyAccessToken(requireContext()) { accessToken ->
+            authService.applyAccessToken { accessToken ->
                 lifecycleScope.launch {
-                    Log.d(
-                        "AddToInventoryFragment",
-                        "adding card to inventory: cardId=$cardId, inventoryId=$inventoryId"
-                    )
+                    Log.d(TAG, "adding card to inventory: cardId=$cardId, inventoryId=$inventoryId")
                     inventoryViewModel.addCardToInventory(accessToken, inventoryId, cardId)
                     popupWindow.dismiss()
                     val intent = Intent(requireContext(), CardListActivity::class.java)
@@ -140,6 +132,9 @@ class AddToInventoryFragment : Fragment() {
     }
 
     companion object {
+
+        private const val TAG = "AddToInventoryFragment"
+
         @JvmStatic
         fun newInstance(cardId: String?): AddToInventoryFragment =
             AddToInventoryFragment().apply {

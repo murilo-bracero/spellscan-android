@@ -7,13 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.lifecycle.lifecycleScope
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.example.spellscanapp.databinding.FragmentDoubleFaceCardDetailBinding
 import com.example.spellscanapp.model.CardFace
-import com.example.spellscanapp.repository.AuthStateRepository
 import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.ui.fragment.component.AddToInventoryFragment
 import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
@@ -32,8 +30,7 @@ class DoubleFaceCardDetailFragment : Fragment() {
     private lateinit var binding: FragmentDoubleFaceCardDetailBinding
 
     private val authService by lazy {
-        val repo = AuthStateRepository()
-        AuthService(repo)
+        AuthService(requireContext())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +47,7 @@ class DoubleFaceCardDetailFragment : Fragment() {
         binding = FragmentDoubleFaceCardDetailBinding.inflate(layoutInflater, container, false)
 
 
-        if (savedInstanceState == null && authService.isAuthorized(requireContext())) {
+        if (savedInstanceState == null && authService.isAuthorized()) {
             childFragmentManager.commit {
                 replace(binding.addToInventoryFragmentContainer.id, AddToInventoryFragment.newInstance(cardId))
             }
