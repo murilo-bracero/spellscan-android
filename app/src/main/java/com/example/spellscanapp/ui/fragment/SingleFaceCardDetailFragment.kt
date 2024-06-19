@@ -12,7 +12,7 @@ import com.example.spellscanapp.databinding.FragmentSingleFaceCardDetailBinding
 import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.ui.fragment.component.AddToInventoryFragment
 import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
-import com.example.spellscanapp.util.loadCard
+import com.example.spellscanapp.util.renderCardDetails
 import kotlinx.coroutines.launch
 
 private const val ARG_CARD_ID = "cardId"
@@ -48,13 +48,18 @@ class SingleFaceCardDetailFragment : Fragment() {
             }
         }
 
+        if(cardId.isNullOrEmpty()) {
+            return binding.root
+        }
+
         lifecycleScope.launch {
-            loadCard(
-                cardId,
-                cardServiceViewModel,
+            val card = cardServiceViewModel.findById(cardId!!) ?: return@launch
+
+            renderCardDetails(
+                card,
                 requireContext(),
-                binding.cardCostContainer,
                 binding.cardCover,
+                binding.cardCostContainer,
                 binding.cardDetailName,
                 binding.cardDetailType,
                 binding.cardDetailSet,
