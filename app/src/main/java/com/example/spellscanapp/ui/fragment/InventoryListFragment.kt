@@ -10,14 +10,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.spellscanapp.databinding.FragmentInventoryListBinding
 import com.example.spellscanapp.exception.ExpiredTokenException
-import com.example.spellscanapp.repository.AuthStateRepository
 import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.ui.CardListActivity
-import com.example.spellscanapp.ui.LoginAdapterActivity
+import com.example.spellscanapp.ui.LoginActivity
 import com.example.spellscanapp.ui.adapter.InventoryListAdapter
 import com.example.spellscanapp.ui.viewmodel.InventoryViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -27,14 +25,16 @@ class InventoryListFragment : Fragment() {
 
     private val inventoryViewModel: InventoryViewModel by activityViewModels()
 
-    private val authService = AuthService(AuthStateRepository())
+    private val authService: AuthService by lazy {
+        AuthService(requireContext())
+    }
 
     private lateinit var binding: FragmentInventoryListBinding
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
         if (exception is ExpiredTokenException) {
             Log.d(TAG, "Handling ExpiredTokenException")
-            val intent = Intent(requireContext(), LoginAdapterActivity::class.java)
+            val intent = Intent(requireContext(), LoginActivity::class.java)
             return@CoroutineExceptionHandler startActivity(intent)
         }
 
@@ -52,7 +52,7 @@ class InventoryListFragment : Fragment() {
         binding.inventoryGridView.layoutManager = LinearLayoutManager(context)
 
         lifecycleScope.launch(coroutineExceptionHandler) {
-            authService.applyAccessToken(requireContext()) {
+            authService.applyAccessToken {
                 launch {
                     val dataset = inventoryViewModel.loadInventories(it)
                     binding.inventoryGridView.adapter = InventoryListAdapter(dataset) {

@@ -24,7 +24,7 @@
             android:name=".ui.CardListActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.LoginAdapterActivity"
+            android:name=".ui.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".ui.CardDetailActivity"
@@ -36,35 +36,6 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.example.spellscanapp.HANDLE_AUTHORIZATION_RESPONSE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="net.openid.appauth.RedirectUriReceiverActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:path="/oauth2redirect"
-                    android:scheme="com.example.spellscanapp" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:path="/logout"
-                    android:scheme="com.example.spellscanapp" />
             </intent-filter>
         </activity>
     </application>

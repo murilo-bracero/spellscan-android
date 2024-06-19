@@ -17,39 +17,9 @@ import com.example.spellscanapp.converter.languageToResource
 import com.example.spellscanapp.converter.symbolToDrawable
 import com.example.spellscanapp.model.Card
 import com.example.spellscanapp.model.CardFace
-import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
-
-suspend fun loadCard(
-    cardId: String?,
-    cardServiceViewModel: CardServiceViewModel,
-    context: Context,
-    cardCostContainer: ViewGroup,
-    imageView: ImageView,
-    cardNameTextView: TextView,
-    cardTypeTextView: TextView,
-    cardSetTextView: TextView,
-    cardLangTextView: TextView,
-    cardPrintedTextTextView: TextView
-) {
-    if (cardId == null) return
-
-    val card = cardServiceViewModel.findById(cardId) ?: return
-
-    renderCardDetails(
-        card,
-        context,
-        imageView,
-        cardCostContainer,
-        cardNameTextView,
-        cardTypeTextView,
-        cardSetTextView,
-        cardLangTextView,
-        cardPrintedTextTextView
-    )
-}
 
 fun renderFrontFace(
-    card: Card?,
+    card: Card,
     context: Context,
     cardCostContainer: ViewGroup,
     imageView: ImageView,
@@ -59,8 +29,6 @@ fun renderFrontFace(
     cardLangTextView: TextView,
     cardPrintedTextTextView: TextView
 ) {
-    if (card == null || card.cardFaces.isEmpty()) return
-
     val face = card.cardFaces.first()
 
     val imageLoader = imageView.context.imageLoader
@@ -81,21 +49,19 @@ fun renderFrontFace(
 }
 
 fun renderBackFace(
-    face: CardFace?,
+    face: CardFace,
     context: Context,
     cardNameTextView: TextView,
     cardTypeTextView: TextView,
     cardPrintedTextTextView: TextView
 ) {
-    if (face == null) return
-
     renderPrintedText(face.printedText, context, cardPrintedTextTextView)
 
     cardNameTextView.text = face.name
     cardTypeTextView.text = face.typeLine
 }
 
-private fun renderCardDetails(
+fun renderCardDetails(
     card: Card,
     context: Context,
     imageView: ImageView,
@@ -180,7 +146,8 @@ private fun renderPrintedText(
             )!!
         val width = context.resources.getDimension(R.dimen.text_mana_cost_width)
         cd.setBounds(0, 0, width.toInt(), width.toInt())
-        modifiablePrintedText = modifiablePrintedText.replaceRange(start, end, "|".repeat(action.length + 2))
+        modifiablePrintedText =
+            modifiablePrintedText.replaceRange(start, end, "|".repeat(action.length + 2))
         ssb.setSpan(
             ImageSpan(cd, ALIGN_BASELINE), start, end,
             SPAN_INCLUSIVE_INCLUSIVE

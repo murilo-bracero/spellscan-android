@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.spellscanapp.databinding.FragmentSignInBinding
-import com.example.spellscanapp.ui.LoginAdapterActivity
+import com.example.spellscanapp.ui.LoginActivity
 
 class SignInFragment : Fragment() {
 
@@ -21,7 +21,7 @@ class SignInFragment : Fragment() {
         binding = FragmentSignInBinding.inflate(inflater, container, false)
 
         binding.logInLink.setOnClickListener {
-            val intent = Intent(requireContext(), LoginAdapterActivity::class.java)
+            val intent = Intent(requireContext(), LoginActivity::class.java)
             startActivity(intent)
         }
 

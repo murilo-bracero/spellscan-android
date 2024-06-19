@@ -13,11 +13,11 @@ import androidx.fragment.app.replace
 import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.ActivityMainBinding
 import com.example.spellscanapp.provider.PermissionsProvider
-import com.example.spellscanapp.repository.AuthStateRepository
 import com.example.spellscanapp.service.AuthService
 import com.example.spellscanapp.ui.fragment.CardAnalysisFragment
 import com.example.spellscanapp.ui.fragment.InventoryListFragment
 import com.example.spellscanapp.ui.fragment.SignInFragment
+import com.google.firebase.FirebaseApp
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -27,8 +27,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val authService: AuthService by lazy {
-        val repo = AuthStateRepository()
-        AuthService(repo)
+        AuthService(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,11 +51,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.check_list_item -> {
-                    if (binding.bottomNavigationView.selectedItemId != R.id.check_list_item && authService.isAuthorized(this)) {
+                    if (binding.bottomNavigationView.selectedItemId != R.id.check_list_item && authService.isAuthorized()) {
                         renderInventoryListFragment(savedInstanceState)
                     }
 
-                    if (!authService.isAuthorized(this)) {
+                    if (!authService.isAuthorized()) {
                         renderSignInFragment(savedInstanceState)
                     }
                     return@setOnItemSelectedListener true
