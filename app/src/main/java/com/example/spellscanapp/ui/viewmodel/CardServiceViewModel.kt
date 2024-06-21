@@ -43,8 +43,4 @@ class CardServiceViewModel(application: Application) : AndroidViewModel(applicat
                 cacheRepository.save(CacheEntity(hashId, Gson().toJson(it)))
             }
     }
-
-    suspend fun delete(card: Card) {
-        Log.d("CardServiceViewModel", "delete - Needs new implementation")
-    }
 }

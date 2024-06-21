@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spellscanapp.R
@@ -21,10 +22,9 @@ import com.example.spellscanapp.databinding.FragmentAddToInventoryBinding
 import com.example.spellscanapp.exception.ExpiredTokenException
 import com.example.spellscanapp.model.Inventory
 import com.example.spellscanapp.service.AuthService
-import com.example.spellscanapp.ui.CardListActivity
-import com.example.spellscanapp.ui.CardListActivity.Companion.INVENTORY_ID_KEY
 import com.example.spellscanapp.ui.LoginActivity
 import com.example.spellscanapp.ui.adapter.InventoryListAdapter
+import com.example.spellscanapp.ui.fragment.CardListFragment.Companion.ARG_INVENTORY_ID
 import com.example.spellscanapp.ui.fragment.InventoryListFragment
 import com.example.spellscanapp.ui.viewmodel.InventoryViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -123,9 +123,10 @@ class AddToInventoryFragment : Fragment() {
                     Log.d(TAG, "adding card to inventory: cardId=$cardId, inventoryId=$inventoryId")
                     inventoryViewModel.addCardToInventory(accessToken, inventoryId, cardId)
                     popupWindow.dismiss()
-                    val intent = Intent(requireContext(), CardListActivity::class.java)
-                    intent.putExtra(INVENTORY_ID_KEY, inventoryId)
-                    startActivity(intent)
+                    val navController = findNavController()
+                    navController.navigate(R.id.cardListFragment, Bundle().apply {
+                        putString(ARG_INVENTORY_ID, inventoryId)
+                    })
                 }
             }
         }

@@ -33,12 +33,10 @@ android {
             )
 
             buildConfigField("String", "BACKEND_HOST", "\"backend.spellscan.com\"")
-            buildConfigField("String", "OIDC_HOST", "\"idp.spellscan.com\"")
         }
 
         debug {
             buildConfigField("String", "BACKEND_HOST", "\"backend.dev.spellscan.com.br\"")
-            buildConfigField("String", "OIDC_HOST", "\"idp.dev.spellscan.com.br\"")
         }
     }
     compileOptions {
@@ -117,6 +115,8 @@ dependencies {
 
     implementation("androidx.room:room-runtime:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     ksp("androidx.room:room-compiler:$room_version")
 
     // auth

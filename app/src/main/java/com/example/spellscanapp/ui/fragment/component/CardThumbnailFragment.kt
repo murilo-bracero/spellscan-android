@@ -1,6 +1,5 @@
 package com.example.spellscanapp.ui.fragment.component
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,11 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.FragmentCardThumbnailBinding
 import com.example.spellscanapp.logger.TAG
-import com.example.spellscanapp.ui.CardDetailActivity
-import com.example.spellscanapp.ui.CardDetailActivity.Companion.CARD_ID_INTENT_KEY
-import com.example.spellscanapp.ui.CardDetailActivity.Companion.HAS_CARD_FACES_INTENT_KEY
+import com.example.spellscanapp.ui.fragment.CardDetailFragment.Companion.ARG_CARD_ID
+import com.example.spellscanapp.ui.fragment.CardDetailFragment.Companion.ARG_HAS_CARD_FACES
 import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
 import com.example.spellscanapp.ui.viewmodel.CardViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -62,10 +62,12 @@ class CardThumbnailFragment : Fragment() {
         lifecycleScope.launch(handler) {
             val found = cardServiceViewModel.search(card)
 
-            val intent = Intent(requireContext(), CardDetailActivity::class.java)
-            intent.putExtra(CARD_ID_INTENT_KEY, found.id)
-            intent.putExtra(HAS_CARD_FACES_INTENT_KEY, found.cardFaces.isNotEmpty())
-            requireContext().startActivity(intent)
+            val navController = findNavController()
+            navController.navigate(R.id.cardDetailFragment, Bundle().apply {
+                putString(ARG_CARD_ID, found.id)
+                putBoolean(ARG_HAS_CARD_FACES, found.cardFaces.isNotEmpty())
+            })
+
             return@launch
         }
     }
