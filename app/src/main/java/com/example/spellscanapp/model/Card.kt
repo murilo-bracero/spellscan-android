@@ -3,17 +3,15 @@ package com.example.spellscanapp.model
 import com.spellscan.cardservice.CardFaceResponse
 import com.spellscan.cardservice.CardResponse
 
+// TODO: implement fields releasedAt, colors and colorIdentity
 class Card(
     val id: String,
     val manaCost: String,
     val lang: String,
     val imageUrl: String,
     val artImageUrl: String,
-    val releasedAt: String,
     val printedText: String,
     val cardFaces: List<CardFace> = listOf(),
-    val colors: List<String> = listOf(),
-    val colorIdentity: List<String> = listOf(),
     name: String,
     type: String,
     set: String
@@ -38,11 +36,8 @@ fun buildCard(response: CardResponse): Card =
         response.lang,
         response.imageUrl,
         response.artImageUrl,
-        response.releasedAt,
         response.printedText,
         buildCardFaces(response.cardFacesList),
-        response.colorsList,
-        response.colorIdentityList,
         response.name,
         response.type,
         response.set

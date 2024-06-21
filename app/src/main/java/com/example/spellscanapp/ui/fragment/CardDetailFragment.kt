@@ -1,12 +1,11 @@
 package com.example.spellscanapp.ui.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.FragmentCardDetailBinding
 
 class CardDetailFragment : Fragment() {

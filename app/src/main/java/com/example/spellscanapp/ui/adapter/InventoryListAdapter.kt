@@ -47,8 +47,4 @@ class InventoryListAdapter(
         holder.inventoryName.text = inventory.name
         holder.totalCards.text = holder.totalCards.text.toString().format(inventory.cardIdsCount)
     }
-
-    companion object {
-        private const val TAG = "InventoryListAdapter"
-    }
 }
