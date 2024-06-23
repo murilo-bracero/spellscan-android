@@ -1,7 +1,6 @@
 package com.example.spellscanapp.ui.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.example.spellscanapp.db.entity.CacheEntity
 import com.example.spellscanapp.model.CacheCallEnum.GET_CARD_BY_ID
@@ -42,9 +41,5 @@ class CardServiceViewModel(application: Application) : AndroidViewModel(applicat
             .also {
                 cacheRepository.save(CacheEntity(hashId, Gson().toJson(it)))
             }
-    }
-
-    suspend fun delete(card: Card) {
-        Log.d("CardServiceViewModel", "delete - Needs new implementation")
     }
 }

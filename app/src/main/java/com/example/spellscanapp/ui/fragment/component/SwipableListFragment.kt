@@ -181,11 +181,6 @@ class SwipableListFragment(
         return if (opacity > 255) 255 else opacity
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun forceUpdate() {
-        binding.cardListView.adapter?.notifyDataSetChanged()
-    }
-
     private val Int.dp
         get() = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,

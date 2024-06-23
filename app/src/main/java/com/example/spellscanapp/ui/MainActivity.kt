@@ -7,27 +7,19 @@ import android.view.MotionEvent.ACTION_DOWN
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.ActivityMainBinding
 import com.example.spellscanapp.provider.PermissionsProvider
-import com.example.spellscanapp.service.AuthService
-import com.example.spellscanapp.ui.fragment.CardAnalysisFragment
-import com.example.spellscanapp.ui.fragment.InventoryListFragment
-import com.example.spellscanapp.ui.fragment.SignInFragment
-import com.google.firebase.FirebaseApp
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
 
     private val permissionsProvider: PermissionsProvider by lazy {
         PermissionsProvider(this)
-    }
-
-    private val authService: AuthService by lazy {
-        AuthService(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,52 +31,11 @@ class MainActivity : AppCompatActivity() {
             permissionsProvider.requestAppPermissions()
         }
 
-        renderCardAnalysisFragment(savedInstanceState)
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.navigation_fragment) as NavHostFragment
+        navController = navHostFragment.navController
 
-        binding.bottomNavigationView.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.scan_item -> {
-                    if (binding.bottomNavigationView.selectedItemId != R.id.scan_item) {
-                        renderCardAnalysisFragment(savedInstanceState)
-                    }
-                    return@setOnItemSelectedListener true
-                }
-
-                R.id.check_list_item -> {
-                    if (binding.bottomNavigationView.selectedItemId != R.id.check_list_item && authService.isAuthorized()) {
-                        renderInventoryListFragment(savedInstanceState)
-                    }
-
-                    if (!authService.isAuthorized()) {
-                        renderSignInFragment(savedInstanceState)
-                    }
-                    return@setOnItemSelectedListener true
-                }
-
-                else -> false
-            }
-        }
-    }
-
-    private fun renderCardAnalysisFragment(savedInstanceState: Bundle?) {
-        renderFragment<CardAnalysisFragment>(R.id.screen_fragment_container_view, savedInstanceState)
-    }
-
-    private fun renderInventoryListFragment(savedInstanceState: Bundle?) {
-        renderFragment<InventoryListFragment>(R.id.screen_fragment_container_view, savedInstanceState)
-    }
-
-    private fun renderSignInFragment(savedInstanceState: Bundle?) {
-        renderFragment<SignInFragment>(R.id.screen_fragment_container_view, savedInstanceState)
-    }
-
-    private inline fun <reified F : Fragment> renderFragment(id: Int, savedInstanceState: Bundle?){
-        if (savedInstanceState == null) {
-            supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                replace<F>(id)
-            }
-        }
+        setupWithNavController(binding.bottomNavigationView, navController)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {

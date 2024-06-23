@@ -39,10 +39,6 @@ class CacheRepository private constructor(context: Context) {
         db.cacheDao().deleteByHash(hash)
     }
 
-    suspend fun deleteAll() {
-        db.cacheDao().deleteAll()
-    }
-
     companion object {
 
         // 30 minutes in milliseconds
