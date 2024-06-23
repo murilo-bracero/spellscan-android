@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/cardAnalysisFragment">
+    <fragment
+        android:id="@+id/cardAnalysisFragment"
+        android:name="com.example.spellscanapp.ui.fragment.CardAnalysisFragment"
+        android:label="CardAnalysisFragment" >
+        <action
+            android:id="@+id/action_cardAnalysisFragment_to_cardDetailFragment"
+            app:destination="@id/cardDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.spellscanapp.ui.fragment.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_signInFragment_to_loginActivity"
+            app:destination="@id/loginActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/inventoryListFragment"
+        android:name="com.example.spellscanapp.ui.fragment.InventoryListFragment"
+        android:label="fragment_inventory_list"
+        tools:layout="@layout/fragment_inventory_list" >
+        <action
+            android:id="@+id/action_inventoryListFragment_to_cardListFragment"
+            app:destination="@id/cardListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cardListFragment"
+        android:name="com.example.spellscanapp.ui.fragment.CardListFragment"
+        android:label="fragment_card_list"
+        tools:layout="@layout/fragment_card_list" >
+        <argument
+            android:name="inventoryId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/cardDetailFragment"
+        android:name="com.example.spellscanapp.ui.fragment.CardDetailFragment"
+        android:label="fragment_card_detail"
+        tools:layout="@layout/fragment_card_detail" >
+        <argument
+            android:name="cardId"
+            app:argType="string" />
+        <argument
+            android:name="hasCardFaces"
+            app:argType="boolean" />
+    </fragment>
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.example.spellscanapp.ui.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
+</navigation>

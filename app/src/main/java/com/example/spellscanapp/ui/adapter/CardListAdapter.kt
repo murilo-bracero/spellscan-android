@@ -1,7 +1,6 @@
 package com.example.spellscanapp.ui.adapter
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,14 +11,12 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import com.example.spellscanapp.R
 import com.example.spellscanapp.model.Card
-import com.example.spellscanapp.ui.CardDetailActivity
-import com.example.spellscanapp.ui.CardDetailActivity.Companion.CARD_ID_INTENT_KEY
-import com.example.spellscanapp.ui.CardDetailActivity.Companion.HAS_CARD_FACES_INTENT_KEY
 import com.google.android.material.card.MaterialCardView
 
 @SuppressLint("NotifyDataSetChanged")
 class CardListAdapter(
-    private val dataset: List<Card>
+    private val dataset: List<Card>,
+    private val onCardClick: (Card) -> Unit
 ) : RecyclerView.Adapter<CardListAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -59,10 +56,7 @@ class CardListAdapter(
         val card = dataset[position]
 
         holder.clickableCard.setOnClickListener {
-            val intent = Intent(holder.itemView.context, CardDetailActivity::class.java)
-            intent.putExtra(CARD_ID_INTENT_KEY, card.id)
-            intent.putExtra(HAS_CARD_FACES_INTENT_KEY, card.cardFaces.isNotEmpty())
-            holder.itemView.context.startActivity(intent)
+            onCardClick(card)
         }
 
         holder.cardName.text = card.name

@@ -10,13 +10,15 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.FragmentInventoryListBinding
 import com.example.spellscanapp.exception.ExpiredTokenException
 import com.example.spellscanapp.service.AuthService
-import com.example.spellscanapp.ui.CardListActivity
 import com.example.spellscanapp.ui.LoginActivity
 import com.example.spellscanapp.ui.adapter.InventoryListAdapter
+import com.example.spellscanapp.ui.fragment.CardListFragment.Companion.ARG_INVENTORY_ID
 import com.example.spellscanapp.ui.viewmodel.InventoryViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -56,9 +58,10 @@ class InventoryListFragment : Fragment() {
                 launch {
                     val dataset = inventoryViewModel.loadInventories(it)
                     binding.inventoryGridView.adapter = InventoryListAdapter(dataset) {
-                        val intent = Intent(requireContext(), CardListActivity::class.java)
-                        intent.putExtra(CardListActivity.INVENTORY_ID_KEY, it.id)
-                        startActivity(intent)
+                        val navController = findNavController()
+                        navController.navigate(R.id.cardListFragment, Bundle().apply {
+                            putString(ARG_INVENTORY_ID, it.id)
+                        })
                     }
                 }
             }
