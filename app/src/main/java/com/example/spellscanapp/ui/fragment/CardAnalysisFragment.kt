@@ -13,9 +13,12 @@ import androidx.navigation.fragment.findNavController
 import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.FragmentCardAnalysisBinding
 import com.example.spellscanapp.logger.TAG
+import com.example.spellscanapp.ui.fragment.CardDetailFragment.Companion.ARG_CARD_ID
+import com.example.spellscanapp.ui.fragment.CardDetailFragment.Companion.ARG_HAS_CARD_FACES
 import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
 import com.example.spellscanapp.ui.viewmodel.CardViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
@@ -50,7 +53,7 @@ class CardAnalysisFragment : Fragment() {
             Snackbar.make(
                 binding.root,
                 "Could not find card due to a network error. Check your internet connection and try again.",
-                Snackbar.LENGTH_LONG
+                LENGTH_LONG
             ).show()
         }
 
@@ -59,8 +62,8 @@ class CardAnalysisFragment : Fragment() {
 
             val navController = findNavController()
             navController.navigate(R.id.cardDetailFragment, Bundle().apply {
-                putString(CardDetailFragment.ARG_CARD_ID, found.id)
-                putBoolean(CardDetailFragment.ARG_HAS_CARD_FACES, found.cardFaces.isNotEmpty())
+                putString(ARG_CARD_ID, found.id)
+                putBoolean(ARG_HAS_CARD_FACES, found.cardFaces.isNotEmpty())
             })
 
             return@launch
