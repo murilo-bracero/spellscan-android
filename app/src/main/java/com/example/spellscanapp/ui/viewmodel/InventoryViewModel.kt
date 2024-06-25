@@ -27,7 +27,7 @@ class InventoryViewModel(application: Application) : AndroidViewModel(applicatio
         val hashKey = buildCacheHash(GET_INVENTORIES)
         val cached = cacheRepository.findByHash(hashKey)
 
-        Log.d("InventoryViewModel", "loadInventories: $cached")
+        Log.d(TAG, "loadInventories: $cached")
 
         if (cached != null) {
             return Gson().fromJson(cached.responsePayload, Array<Inventory>::class.java).toList()
@@ -44,7 +44,7 @@ class InventoryViewModel(application: Application) : AndroidViewModel(applicatio
         val hashKey = buildCacheHash(GET_INVENTORY_BY_ID, id)
         val cached = cacheRepository.findByHash(hashKey)
 
-        Log.d("InventoryViewModel", "findInventoryById: $cached")
+        Log.d(TAG, "findInventoryById: $cached")
 
         if (cached != null) {
             return Gson().fromJson(cached.responsePayload, Inventory::class.java)
@@ -68,5 +68,9 @@ class InventoryViewModel(application: Application) : AndroidViewModel(applicatio
 
         hashKey = buildCacheHash(GET_INVENTORIES)
         cacheRepository.deleteByHash(hashKey)
+    }
+
+    companion object {
+        const val TAG = "InventoryViewModel"
     }
 }
