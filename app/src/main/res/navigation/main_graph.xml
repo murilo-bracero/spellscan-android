@@ -56,4 +56,9 @@
         android:name="com.example.spellscanapp.ui.LoginActivity"
         android:label="activity_login"
         tools:layout="@layout/activity_login" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.spellscanapp.ui.fragment.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

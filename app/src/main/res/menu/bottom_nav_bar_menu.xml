@@ -9,5 +9,11 @@
         android:id="@+id/inventoryListFragment"
         android:enabled="true"
         android:icon="@drawable/list_icon"
-        android:title="@string/list"/>
+        android:title="@string/inventories"/>
+
+    <item
+        android:id="@+id/profileFragment"
+        android:enabled="true"
+        android:icon="@drawable/profile_icon"
+        android:title="@string/profile"/>
 </menu>

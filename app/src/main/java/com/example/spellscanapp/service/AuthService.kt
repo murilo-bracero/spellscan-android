@@ -19,9 +19,13 @@ class AuthService(context: Context) {
 
     fun logout() = Firebase.auth.signOut()
 
+    fun getCurrentUser() = Firebase.auth.currentUser
+
+    fun sendPasswordResetEmail(email: String) = Firebase.auth.sendPasswordResetEmail(email)
+
     @Throws(ExpiredTokenException::class)
     suspend fun <T : Any> applyAccessToken(function: (String) -> T): T {
-        val user = Firebase.auth.currentUser ?: throw ExpiredTokenException()
+        val user = getCurrentUser() ?: throw ExpiredTokenException()
 
         return withContext(Dispatchers.IO) {
             val getIdTokenResponse = user.getIdToken(false).await()
