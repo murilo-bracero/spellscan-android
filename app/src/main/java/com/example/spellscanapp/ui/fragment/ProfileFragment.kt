@@ -122,7 +122,7 @@ class ProfileFragment : Fragment() {
         authService.getCurrentUser()?.let {
             binding.profileUsernameText.text.insert(
                 0,
-                defaultString(it.displayName, "Liliana Vess")
+                if (!it.displayName.isNullOrEmpty()) it.displayName else "Liliana Vess"
             )
             binding.profileUsernameText.tag = binding.profileUsernameText.keyListener
             binding.profileUsernameText.keyListener = null
@@ -130,14 +130,6 @@ class ProfileFragment : Fragment() {
             binding.profileEmailText.text = it.email
 
             binding.profilePicture.loadFromUrl(it.photoUrl.toString())
-        }
-    }
-
-    private fun defaultString(canBeNull: String?, default: String): String {
-        return if (canBeNull.isNullOrEmpty()) {
-            default
-        } else {
-            canBeNull
         }
     }
 
