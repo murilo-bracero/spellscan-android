@@ -5,7 +5,6 @@ import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import com.example.spellscanapp.logger.TAG
 import com.example.spellscanapp.model.CardReference
 import com.example.spellscanapp.service.CardImageAnalyzerService
 import com.google.mlkit.vision.common.InputImage
@@ -43,5 +42,9 @@ class CardImageAnalyzer(
                 isOnProcessing = false
                 imageProxy.close()
             }
+    }
+
+    companion object {
+        private const val TAG = "CardImageAnalyzer"
     }
 }

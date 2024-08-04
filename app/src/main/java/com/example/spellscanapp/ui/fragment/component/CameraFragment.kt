@@ -20,7 +20,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.example.spellscanapp.analyzer.CardImageAnalyzer
 import com.example.spellscanapp.databinding.FragmentCameraBinding
-import com.example.spellscanapp.logger.TAG
 import com.example.spellscanapp.model.CardReference
 import com.example.spellscanapp.service.CardImageAnalyzerService
 import com.example.spellscanapp.ui.viewmodel.CardViewModel
@@ -138,5 +137,9 @@ class CameraFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()
+    }
+
+    companion object {
+        private const val TAG = "CameraFragment"
     }
 }

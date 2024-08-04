@@ -12,7 +12,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.spellscanapp.R
 import com.example.spellscanapp.databinding.FragmentCardAnalysisBinding
-import com.example.spellscanapp.logger.TAG
 import com.example.spellscanapp.ui.fragment.CardDetailFragment.Companion.ARG_CARD_ID
 import com.example.spellscanapp.ui.fragment.CardDetailFragment.Companion.ARG_HAS_CARD_FACES
 import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
@@ -72,5 +71,9 @@ class CardAnalysisFragment : Fragment() {
 
     private fun setLoading(loading: Boolean) {
         binding.loadingProgressIndicator.isVisible = loading
+    }
+
+    companion object {
+        const val TAG = "CardAnalysisFragment"
     }
 }
