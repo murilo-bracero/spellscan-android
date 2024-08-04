@@ -26,8 +26,9 @@ class GrpcConfig {
         }
 
         channel = OkHttpChannelBuilder
-            .forAddress(BACKEND_HOST, 443)
-            .useTransportSecurity()
+            .forAddress("10.0.2.2", 9000)
+            //.useTransportSecurity()
+            .usePlaintext()
             .build()
     }
 
