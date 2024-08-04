@@ -3,7 +3,6 @@ package com.example.spellscanapp.model
 import com.spellscan.cardservice.CardFaceResponse
 import com.spellscan.cardservice.CardResponse
 
-// TODO: implement fields releasedAt, colors and colorIdentity
 class Card(
     val id: String,
     val manaCost: String,

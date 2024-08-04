@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import coil.imageLoader
+import coil.ImageLoader
+import coil.request.CachePolicy.ENABLED
 import coil.request.ImageRequest
 import com.example.spellscanapp.R
 import com.example.spellscanapp.model.Card
@@ -68,7 +69,11 @@ class CardListAdapter(
         else
             card.imageUrl
 
-        val imageLoader = holder.cardImage.context.imageLoader
+        val imageLoader = ImageLoader.Builder(holder.cardImage.context)
+            .memoryCachePolicy(ENABLED)
+            .diskCachePolicy(ENABLED)
+            .build()
+
         val request = ImageRequest.Builder(holder.cardImage.context)
             .data(cardImageUrl)
             .target(holder.cardImage)

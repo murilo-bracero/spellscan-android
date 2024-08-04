@@ -1,6 +1,5 @@
 package com.example.spellscanapp.ui.fragment.component
 
-import android.annotation.SuppressLint
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
 import android.graphics.Canvas
@@ -18,22 +17,25 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spellscanapp.R
 import com.example.spellscanapp.builder.SimpleCallbackBuilder
 import com.example.spellscanapp.databinding.FragmentSwipableListBinding
-import com.example.spellscanapp.logger.TAG
+import com.example.spellscanapp.ui.adapter.CardListAdapter
+import com.example.spellscanapp.ui.fragment.CardDetailFragment
+import com.example.spellscanapp.ui.viewmodel.SwipeableListViewModel
 import com.google.android.material.color.MaterialColors
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-class SwipableListFragment(
-    private val adapter: RecyclerView.Adapter<*>,
-    private val onCardDeleted: (Int) -> Unit,
-    private val onCardSearch: (Int) -> Unit
-) : Fragment() {
+class SwipeableListFragment : Fragment() {
+
+    private val swipeableListViewModel: SwipeableListViewModel by activityViewModels()
+
     private lateinit var binding: FragmentSwipableListBinding
 
     override fun onCreateView(
@@ -44,7 +46,15 @@ class SwipableListFragment(
 
         binding.cardListView.layoutManager = LinearLayoutManager(context)
 
-        binding.cardListView.adapter = adapter
+        swipeableListViewModel.dataset.observe(viewLifecycleOwner) { dataset ->
+            binding.cardListView.adapter = CardListAdapter(dataset) {
+                val navController = findNavController()
+                navController.navigate(R.id.cardDetailFragment, Bundle().apply {
+                    putString(CardDetailFragment.ARG_CARD_ID, it.id)
+                    putBoolean(CardDetailFragment.ARG_HAS_CARD_FACES, it.cardFaces.isNotEmpty())
+                })
+            }
+        }
 
         val displayMetrics = resources.displayMetrics
         val width = (displayMetrics.widthPixels / displayMetrics.density).toInt().dp
@@ -54,20 +64,12 @@ class SwipableListFragment(
             context?.theme
         )
 
-        val searchIcon = ResourcesCompat.getDrawable(
-            resources, R.drawable.search_icon,
-            context?.theme
-        )
-
         val callback = SimpleCallbackBuilder(0, ItemTouchHelper.RIGHT)
-            .onSwipedStart { viewHolder ->
-                onCardDeleted(viewHolder.adapterPosition)
-            }
-            .onSwipedEnd { viewHolder ->
-                onCardSearch(viewHolder.adapterPosition)
+            .onSwipedStart {
+//                viewHolder -> onCardDeleted(viewHolder.adapterPosition)
             }
             .onChildDraw { c, viewHolder, dX ->
-                onChildDraw(c, viewHolder, dX, deleteIcon, searchIcon, width)
+                onChildDraw(c, viewHolder, dX, deleteIcon, width)
             }
             .build()
 
@@ -83,19 +85,18 @@ class SwipableListFragment(
         viewHolder: RecyclerView.ViewHolder,
         dX: Float,
         deleteIcon: Drawable?,
-        searchIcon: Drawable?,
         width: Int
     ) {
         drawTileBackground(c, viewHolder, dX, width)
 
-        if (deleteIcon == null || searchIcon == null) {
-            Log.w(TAG, "deleteIcon or searchIcon is null")
+        if (deleteIcon == null) {
+            Log.w(TAG, "deleteIcon is null")
             return
         }
 
-        drawTileIcons(viewHolder, deleteIcon, searchIcon, width)
+        drawTileIcons(viewHolder, deleteIcon)
 
-        drawIconByDirection(c, dX, deleteIcon, searchIcon)
+        drawIconByDirection(c, dX, deleteIcon)
     }
 
     private fun drawTileBackground(
@@ -124,9 +125,7 @@ class SwipableListFragment(
 
     private fun drawTileIcons(
         viewHolder: RecyclerView.ViewHolder,
-        deleteIcon: Drawable,
-        searchIcon: Drawable,
-        width: Int
+        deleteIcon: Drawable
     ) {
         val textMargin = 20.dp
         deleteIcon.bounds = Rect(
@@ -137,31 +136,21 @@ class SwipableListFragment(
                     + textMargin + 8.dp
         )
 
-        searchIcon.bounds = Rect(
-            width - textMargin - searchIcon.intrinsicWidth,
-            viewHolder.itemView.top + textMargin + 8.dp,
-            width - textMargin,
-            viewHolder.itemView.top + searchIcon.intrinsicHeight
-                    + textMargin + 8.dp
-        )
-
-        updateIconColor(deleteIcon, searchIcon)
+        updateIconColor(deleteIcon)
     }
 
-    private fun updateIconColor(deleteIcon: Drawable, searchIcon: Drawable) {
+    private fun updateIconColor(deleteIcon: Drawable) {
         getMaterialColor(com.google.android.material.R.attr.colorOnPrimary, Color.WHITE).also {
             deleteIcon.colorFilter = BlendModeColorFilter(it, BlendMode.SRC_ATOP)
-            searchIcon.colorFilter = BlendModeColorFilter(it, BlendMode.SRC_ATOP)
         }
     }
 
     private fun drawIconByDirection(
         c: Canvas,
         dX: Float,
-        deleteIcon: Drawable,
-        searchIcon: Drawable
+        deleteIcon: Drawable
     ) {
-        if (dX > 0) deleteIcon.draw(c) else searchIcon.draw(c)
+        if (dX > 0) deleteIcon.draw(c)
     }
 
     private fun getMaterialColor(
@@ -186,4 +175,8 @@ class SwipableListFragment(
             TypedValue.COMPLEX_UNIT_DIP,
             toFloat(), resources.displayMetrics
         ).roundToInt()
+
+    companion object {
+        private const val TAG = "SwipeableListFragment"
+    }
 }

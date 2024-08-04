@@ -11,6 +11,8 @@ import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.spellscanapp.R
@@ -22,9 +24,10 @@ import com.example.spellscanapp.ui.LoginActivity
 import com.example.spellscanapp.ui.adapter.CardListAdapter
 import com.example.spellscanapp.ui.fragment.CardDetailFragment.Companion.ARG_CARD_ID
 import com.example.spellscanapp.ui.fragment.CardDetailFragment.Companion.ARG_HAS_CARD_FACES
-import com.example.spellscanapp.ui.fragment.component.SwipableListFragment
+import com.example.spellscanapp.ui.fragment.component.SwipeableListFragment
 import com.example.spellscanapp.ui.viewmodel.CardServiceViewModel
 import com.example.spellscanapp.ui.viewmodel.InventoryViewModel
+import com.example.spellscanapp.ui.viewmodel.SwipeableListViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
@@ -38,6 +41,7 @@ class CardListFragment : Fragment() {
 
     private val cardServiceViewModel: CardServiceViewModel by activityViewModels()
     private val inventoryViewModel: InventoryViewModel by activityViewModels()
+    private val swipeableListViewModel: SwipeableListViewModel by activityViewModels()
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
         if (exception is ExpiredTokenException) {
@@ -94,17 +98,11 @@ class CardListFragment : Fragment() {
         val dataset = inventory.cardIds
             .map { cardServiceViewModel.findById(it)!! }
 
-        val adapter = CardListAdapter(dataset) {
-            val navController = findNavController()
-            navController.navigate(R.id.cardDetailFragment, Bundle().apply {
-                putString(ARG_CARD_ID, it.id)
-                putBoolean(ARG_HAS_CARD_FACES, it.cardFaces.isNotEmpty())
-            })
-        }
+        swipeableListViewModel.dataset.value = dataset
 
-        childFragmentManager.beginTransaction()
-            .replace(R.id.local_list_fragment_container, SwipableListFragment(adapter, {}, {}))
-            .commit()
+        childFragmentManager.commit {
+            replace<SwipeableListFragment>(R.id.local_list_fragment_container)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
