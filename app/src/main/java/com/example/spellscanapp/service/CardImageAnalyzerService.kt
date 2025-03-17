@@ -7,23 +7,28 @@ import com.google.mlkit.vision.text.Text.TextBlock
 
 class CardImageAnalyzerService {
 
+    private val card_types = listOf("creature", "land", "artifact", "enchantment", "planeswalker", "battle", "instant", "sorcery", "tribal", "kindred", "interrupt", "mana source", "summon", "enchant")
+
     fun analyze(visionText: Text, onCardRecognized: (CardReference) -> Unit) {
         if (!hasEnoughBlocks(visionText.textBlocks)) {
             return
         }
 
-        // remove invalid characters for type, name and set
-        var textBlocks = removeOnlyNumbersBlocks(visionText.textBlocks)
+        val lines = visionText.textBlocks
+            .flatMap { it.lines }
+            .filter { it.text.isNotBlank() }
 
-        textBlocks = removeSpecialCharBlocks(textBlocks)
+        val conf = lines.filter { it.confidence > 0.5 }
+            .filter { !hasSpecialChars(it.text) }
+            .filter { isNotNumberString(it.text) }
+            .sortedBy { comparePointsByNortheastToSouthwest(it.cornerPoints!!.toList()) }
 
-        sortByCord(textBlocks)
 
-        val cardName = findCardName(textBlocks)
+        val cardName = findCardName(conf)
 
-        val cardType = findCardType(textBlocks)
+        val cardType = findCardType(conf)
 
-        val cardSet = findCardSet(textBlocks)
+        val cardSet = findCardSet(conf)
 
         val card = CardReference(cardName, cardType, cardSet)
 
@@ -34,51 +39,46 @@ class CardImageAnalyzerService {
         return textBlocks.size >= 5
     }
 
-    private fun sortByCord(textBlocks: List<TextBlock>): List<TextBlock> {
-        return textBlocks.sortedBy { tb ->
-            val northwestPoint = tb.cornerPoints
-                ?.minByOrNull { it.x }
-                ?.let { point ->
-                    Point(point.x, tb.cornerPoints!!.minByOrNull { it.y }?.y ?: 0)
-                } ?: Point(0, 0)
+    private fun comparePointsByNortheastToSouthwest(points: List<Point>): Int {
+        val northwestPoint = points
+            .minByOrNull { it.x }
+            ?.let { point ->
+                Point(point.x, points.minByOrNull { it.y }?.y ?: 0)
+            } ?: Point(0, 0)
 
-            Comparator<Point> { p1, p2 ->
-                compareValuesBy(p1, p2, { it.x }, { it.y })
-            }.compare(northwestPoint, Point(0, 0))
-        }
+        return Comparator<Point> { p1, p2 ->
+            compareValuesBy(p1, p2, { it.x }, { it.y })
+        }.compare(northwestPoint, Point(0, 0))
     }
 
-    private fun removeOnlyNumbersBlocks(textBlocks: List<TextBlock>): List<TextBlock> {
-        return textBlocks
-            .filter { it.text.toIntOrNull() == null }
+    private fun isNotNumberString(text: String): Boolean {
+        return text.toIntOrNull() == null
     }
 
-    private fun removeSpecialCharBlocks(textBlocks: List<TextBlock>): List<TextBlock> {
+    private fun hasSpecialChars(text: String): Boolean {
         val regex = """[*/@()\[\]{}%$#]""".toRegex()
 
-        return textBlocks
-            .filter { !it.text.contains(regex) }
+        return text.contains(regex)
     }
 
-    private fun findCardName(textBlocks: List<TextBlock>): String {
-        val copy = textBlocks
-            .toTypedArray()
-            .copyOf(textBlocks.size)
-            .filterNotNull()
-
-        return copy
+    private fun findCardName(lines: List<Text.Line>): String {
+        return lines
+            .take(lines.size / 2)
             .first { it.text.length in 2..40 }
             .text
             .replace("\n", " ")
     }
 
-    private fun findCardType(textBlocks: List<TextBlock>): String {
-        return textBlocks[1].text
+    private fun findCardType(lines: List<Text.Line>): String {
+        return lines.drop(1).firstOrNull() {
+            card_types.contains(it.text.lowercase())
+        }?.text ?: ""
     }
 
-    private fun findCardSet(textBlocks: List<TextBlock>): String {
+    private fun findCardSet(lines: List<Text.Line>): String {
         val regex = "^[A-Z0-9]{3}".toRegex()
-        val setTextBlock = textBlocks.filter { regex.containsMatchIn(it.text) }
+
+        val setTextBlock = lines.drop(lines.size / 2).filter { regex.containsMatchIn(it.text) }
             .maxByOrNull { it.text.length }
 
         return setTextBlock?.text?.take(3) ?: ""
