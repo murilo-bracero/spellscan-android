@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.spellscan.cardservice";
+option java_outer_classname = "CardServiceProto";
+
+package cardservice;
+
+service CardService {
+  rpc find(CardRequest) returns (CardResponse);
+  rpc findById(FindByIdRequest) returns (CardResponse);
+  rpc findAll(stream CardRequest) returns (stream CardResponse);
+}
+
+message CardRequest {
+  string name = 1;
+  string type = 2;
+  string set = 3;
+}
+
+message FindByIdRequest {
+  string id = 1;
+}
+
+message CardResponse {
+  string id = 1;
+  string name = 2;
+  string manaCost = 3;
+  string type = 4;
+  string set = 5;
+  string lang = 6;
+  string imageUrl = 8;
+  string artImageUrl = 9;
+  string releasedAt = 10;
+  string printedText = 11;
+  repeated CardFaceResponse cardFaces = 12;
+  repeated string colors = 13;
+  repeated string colorIdentity = 14;
+}
+
+message CardFaceResponse {
+  string name = 1;
+  string manaCost = 2;
+  string typeLine = 3;
+  string printedText = 4;
+  string flavorText = 5;
+  string cardImage = 6;
+  string artImage = 7;
+  repeated string colors = 8;
+  repeated string colorIndicator = 9;
+}

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.fragment.CardAnalysisFragment">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/cameraFragmentContainerView"
+        android:name="com.example.spellscanapp.ui.fragment.component.CameraFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontal_centerline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/loading_progress_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:trackThickness="10dp"
+        app:trackColor="@color/material_dynamic_secondary70"
+        app:indicatorColor="@color/material_dynamic_secondary40"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/scan_fab"
+        android:backgroundTint="@color/material_dynamic_secondary40"
+        app:borderWidth="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:src="@drawable/scanner_icon"
+        app:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/horizontal_centerline"
+        app:layout_constraintVertical_bias="0.7"
+        android:contentDescription="@string/scan_button_content_description" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

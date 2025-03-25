@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.Spellscan" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
@@ -12,5 +12,21 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="delete_background_color">@color/red_200</item>
+
+        <item name="search_background_color">@color/blue_200</item>
+
+        <item name="border_color">@color/opaque_grey</item>
+
+        <item name="checkboxStyle">@style/Widget.App.CheckBox</item>
+    </style>
+
+    <style name="Widget.App.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.CheckBox</item>
+    </style>
+
+    <style name="ThemeOverlay.App.CheckBox" parent="">
+        <item name="colorOnSurface">@color/opaque_grey</item>
+        <item name="colorSecondary">@color/material_dynamic_primary60</item>
     </style>
 </resources>

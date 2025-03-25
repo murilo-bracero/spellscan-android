@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="inventories">Inventários</string>
+    <string name="unsupported">Não suportado</string>
+    <string name="de">Alemão</string>
+    <string name="en">Inglês</string>
+    <string name="fr">Francês</string>
+    <string name="it">Italiano</string>
+    <string name="la">Latim</string>
+    <string name="pt">Português</string>
+    <string name="profile">Perfil</string>
+    <string name="scan_and_inventory_in_one_place">Scan e inventários no mesmo lugar</string>
+    <string name="create_your_account_or_sign_in_to_use_the_inventory_feature">Crie sua conta ou entre para usar a função de inventário</string>
+    <string name="sign_in">Entrar</string>
+    <string name="or_create_your_account_now"><u>Entrar se já tiver uma conta</u></string>
+    <string name="logout">Sair</string>
+    <string name="clear_list">Limpar Lista</string>
+    <string name="totalcards_cards">%d Cartas</string>
+    <string name="clear_filter">Limpar Filtro</string>
+    <string name="add_to_inventory">Adicionar ao inventário</string>
+    <string name="scan_button_content_description">Botão para escanear a carta</string>
+</resources>

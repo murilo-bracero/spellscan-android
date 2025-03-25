@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.spellscan.inventoryservice";
+option java_outer_classname = "InventoryServiceProto";
+
+package inventoryservice;
+
+
+// This service needs authentication in all endpoints
+// The authentication is done by the Keycloak server
+// passing the access token in the header as a Bearer token
+service InventoryService {
+  rpc createInventory(CreateInventoryRequest) returns (CreateInventoryResponse);
+  rpc findInventoryById(FindInventoryByIdRequest) returns (InventoryResponse);
+  rpc findInventoriesByOwnerId(Empty) returns (FindInventoriesByOwnerIdResponse);
+  rpc addToInventory(AddToInventoryRequest) returns (Empty);
+}
+
+message CreateInventoryRequest {
+  string name = 1;
+}
+
+message CreateInventoryResponse {
+  string id = 1;
+  string name = 2;
+}
+
+message FindInventoryByIdRequest {
+  string id = 1;
+}
+
+message FindInventoriesByOwnerIdResponse {
+  repeated InventoryResponse inventories = 1;
+}
+
+message InventoryResponse {
+  string id = 1;
+  string name = 2;
+  repeated string cardIds = 3;
+}
+
+message AddToInventoryRequest {
+  string cardId = 1;
+  string inventoryId = 2;
+}
+
+message Empty {
+}
